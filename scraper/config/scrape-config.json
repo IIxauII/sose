@@ -1,0 +1,17 @@
+{
+    "url": {
+        "search": "http://www.sodexo-akp.de/Sites/GeoCoding/affiliateResult.aspx"
+    },
+    "selector": {
+        "locationInput": "#ctl00_cph_middle_detb_ziploc_innerCbZipcodeLocation_I",
+        "searchButton": "#ctl00_cph_middle_btn_search",
+        "searchResultsAmountDropdown": "#ctl00_cph_middle_degv_Results_PagerBarT_decb_datasetsPerPage_I",
+        "searchResultsAmountAll": "#ctl00_cph_middle_degv_Results_PagerBarT_decb_datasetsPerPage_DDD_L_LBI4T0",
+        "searchResultsContainer": "#ctl00_cph_middle_dev_results > #div_gridview #ctl00_cph_middle_degv_Results_DXMainTable"
+    },
+    "results": {
+        "path": "./results/",
+        "seperator": "-",
+        "fileEnding": ".html"
+    }
+}
