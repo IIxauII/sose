@@ -49,10 +49,18 @@ This is our only communication pipeline for the frontend.
 It provides AKP data from the database to the frontend.
 In the future it will be possible to trigger new scrapes/processes/saves with this API. Currently still work in progress
 
+```diff
+- This is still in a very early state and needs a lot of work
+```
+
 ## Frontend
 
 ### sodexosearcher
 The frontend is built with `ionic` and `Vue.js`. I aim to use one codebase for all platforms.
 The core focus is currently to provide functionality for a web application & ios, android support afterwards.
+
+```diff
+- This is still in a very early state and needs a lot of work
+```
 
 
