@@ -1,0 +1,15 @@
+{
+  "name": "processor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "process": "node ./process-scraped-data.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10"
+  }
+}

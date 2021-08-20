@@ -1,0 +1,23 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --watch src --exec npm run server",
+    "server": "node api.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@koa/cors": "^3.1.0",
+    "koa": "^2.13.1",
+    "koa-body": "^4.2.0",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^10.0.0",
+    "nodemon": "^2.0.12",
+    "sqlite": "^4.0.23",
+    "sqlite3": "^5.0.2"
+  }
+}

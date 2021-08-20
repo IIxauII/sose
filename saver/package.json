@@ -1,0 +1,17 @@
+{
+  "name": "saver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "save": "node ./save-processed-data.js",
+    "setup": "node ./setup-database.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "sqlite": "^4.0.23",
+    "sqlite3": "^5.0.2"
+  }
+}

@@ -1,0 +1,15 @@
+{
+    "input": {
+        "path": "../scraper/results/",
+        "fileEnding": ".html",
+        "selectors": {
+            "entries": "tr > td > div.entry",
+            "name": "div.name",
+            "address": "div.adress"
+        }
+    },
+    "output": {
+        "path": "./results/",
+        "fileEnding": ".json"
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "input": {
+        "path": "../processor/results/"
+    },
+    "db": {
+        "path": "../database/",
+        "name": "sodexo-akp.db" 
+    }
+}
