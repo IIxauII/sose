@@ -8,7 +8,7 @@ The idea for this project came up after trying to utilize the existing sodexo se
 * https://play.google.com/store/apps/details?id=com.appsrise.sodexo.voucher&hl=de&gl=US
 * https://apps.apple.com/de/app/restaurant-pass/id1541655392
 
-All of these solutions have horrible user experience and / or a laggy UI
+I was not satisfied with the user exerience in the webbrowser and wanted to achieve a unified solution for all end devices.
 
 ## Backend
 
