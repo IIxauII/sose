@@ -34,9 +34,10 @@ import {
 import { useRoute } from 'vue-router';
 import { HTTP } from '@ionic-native/http';
 import axios from 'axios';
-import { defineComponent } from "@vue/runtime-core";
+//import { defineComponent } from "@vue/runtime-core";
 
-export default defineComponent({
+//export default defineComponent({
+export default {
   name: "Tab2CityDetails",
   components: {
   IonPage,
@@ -102,5 +103,6 @@ export default defineComponent({
       console.log(this.cityDetailData);
     }
   }
-});
+//});
+};
 </script>
