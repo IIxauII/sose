@@ -35,16 +35,16 @@ import {
   IonItem,
   IonList,
   IonLabel,
-  IonButton,
   IonSearchbar,
 } from "@ionic/vue";
 import { HTTP } from '@ionic-native/http';
 import axios from 'axios';
-import { defineComponent } from "@vue/runtime-core";
+//import { defineComponent } from "@vue/runtime-core";
 
-export default defineComponent({
+//export default defineComponent({
+export default {
   name: "Tab2",
-  components: [ IonPage, IonToolbar, IonTitle, IonHeader, IonContent, IonItem, IonList, IonLabel, IonButton, IonSearchbar],
+  components: { IonPage, IonToolbar, IonTitle, IonHeader, IonContent, IonItem, IonList, IonLabel, IonSearchbar },
   data() {
     return {
       sodexoData: null
@@ -87,5 +87,6 @@ export default defineComponent({
       console.log(clickedCity);
     }
   }
-});
+//});
+};
 </script>
