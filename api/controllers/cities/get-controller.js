@@ -42,6 +42,7 @@ module.exports = {
             ctx.throw(400, 'CITIES MAYDAY!');
         }
     },
+    // this is currently case sensitive
     async getCity(ctx) {
         try {
             console.log(ctx.params.name);
@@ -52,13 +53,13 @@ module.exports = {
                             if (err) {
                                 reject(err);
                             }
+                            //console.log(data);
                             resolve(data);
                             await dbConnector.closeDB(db);
                         });
                     })
                 });
             });
-
             promise.then(
                 (res) => {
                     return res;
