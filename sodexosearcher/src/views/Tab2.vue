@@ -6,10 +6,15 @@
       </ion-toolbar>
     </ion-header>
     <ion-content fullscreen>
-      <ion-searchbar></ion-searchbar>
+      <ion-searchbar
+        debounce="250"
+        animated
+        v-model="searchBarValue"
+        @ionChange="searchBarValueAdjusted()"
+      ></ion-searchbar>
       <ion-list>
         <ion-item 
-        v-for="city in sodexoData"
+        v-for="city in filteredSodexoData"
         v-bind:key="city.name"
         button
         @click="cityClicked(city.name)"
@@ -47,7 +52,9 @@ export default {
   components: { IonPage, IonToolbar, IonTitle, IonHeader, IonContent, IonItem, IonList, IonLabel, IonSearchbar },
   data() {
     return {
-      sodexoData: null
+      filteredSodexoData: null,
+      sodexoData: null,
+      searchBarValue: null,
     }
   },
   mounted() {
@@ -80,11 +87,19 @@ export default {
     updateSodexoData (newValue) {
       console.log('updateSodexoData');
       console.log(newValue.data)
-      this.sodexoData = newValue.data;
+      this.sodexoData = newValue.data.sort((a, b) => a.name.localeCompare(b.name));
+      this.filteredSodexoData = this.sodexoData;
     },
     cityClicked (clickedCity) {
       console.log('cityClicked');
       console.log(clickedCity);
+    },
+    searchBarValueAdjusted () {
+      console.log('searchBarValueAdjusted');
+      console.log(this.searchBarValue);
+      this.filteredSodexoData = this.sodexoData.filter((city) => { 
+        return city.name.toLowerCase().includes(this.searchBarValue.toLowerCase()); 
+      });
     }
   }
 //});
