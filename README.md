@@ -56,6 +56,13 @@ Endpoints (WIP):
 `GET /api/cities/{cityName}`
 `POST /api/cities/{cityName}`
 
+### shellscripts
+This folder contains shellscripts to simply processes which are needed during project runtime or setup.
+
+Current scripts:
+The `addACity.sh` is being used by the koa.js api to trigger a scrape/process/save flow when a request comes in to add a new city.
+The `setupProject.sh` is being used to simply initial project setup.
+
 ## Frontend
 
 ### sodexosearcher
