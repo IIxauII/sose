@@ -46,12 +46,14 @@ Example Usage:
 This API is built using `koa.js`, a lightweight web framework created from the makers of express.js.
 This is our only communication pipeline for the frontend.
 
-It provides AKP data from the database to the frontend.
-In the future it will be possible to trigger new scrapes/processes/saves with this API. Currently still work in progress
+It provides AKP data from the database to the frontend & the possibly to trigger a scrape/process/save flow for adding a new city to the database.
 
-```diff
-- This is still in a very early state and needs a lot of work
-```
+This API is still work in progress.
+
+Endpoints (WIP):
+`GET /api/cities`
+`GET /api/cities/{cityName}`
+`POST /api/cities/{cityName}`
 
 ## Frontend
 
@@ -59,8 +61,10 @@ In the future it will be possible to trigger new scrapes/processes/saves with th
 The frontend is built with `ionic` and `Vue.js`. I aim to use one codebase for all platforms.
 The core focus is currently to provide functionality for a web application & ios, android support afterwards.
 
-```diff
-- This is still in a very early state and needs a lot of work
-```
+This ionic frontend is still work in progress.
 
-
+Current State (WIP):
+* Overview over saved cities in a searchable list
+* Clicking on a city displays the available sodexo partners of that city
+* Clicking on a sodexo partner opens tab to the location in google maps
+* Request page for adding a new city to the database
