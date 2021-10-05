@@ -9,10 +9,27 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content>
+    <ion-content fullscreen>
+      <ion-searchbar
+        debounce="250"
+        animated
+        v-model="searchBarValue"
+        @ionChange="searchBarValueAdjusted()"
+      ></ion-searchbar>
       <ion-list>
-        <ion-item v-for="(partner, index) in cityDetailData.sodexoPartners" v-bind:key="index">
-          {{ partner.name }}
+        <ion-item
+          v-for="(partner, index) in filteredCitySodexoPartners"
+          v-bind:key="index"
+          target='_blank'
+          v-bind:href='"https://www.google.com/maps/search/?api=1&query=" + partner.name + "," + partner.address'
+        >
+          <ion-label>{{ partner.name }}</ion-label>
+          <ion-button
+            target='_blank'
+            v-bind:href='"https://www.google.com/maps/search/?api=1&query=" + partner.name + "," + partner.address'
+          >
+            <ion-icon :icon="map" />
+          </ion-button>
         </ion-item>
       </ion-list>
     </ion-content>
@@ -30,7 +47,12 @@ import {
   IonItem,
   IonBackButton,
   IonButtons,
+  IonButton,
+  IonLabel,
+  IonIcon,
+  IonSearchbar,
 } from "@ionic/vue";
+import { map } from 'ionicons/icons';
 import { useRoute } from 'vue-router';
 import { HTTP } from '@ionic-native/http';
 import axios from 'axios';
@@ -49,7 +71,16 @@ export default {
   IonItem,
   IonBackButton,
   IonButtons,
+  IonButton,
+  IonLabel,
+  IonIcon,
+  IonSearchbar,
 },
+  setup() {
+    return {
+      map,
+    }
+  },
   data() {
     const route = useRoute();
     const { cityName } = route.params;  
@@ -59,7 +90,9 @@ export default {
           name: null,
           sodexoPartners: null,
       },
-      id: cityName
+      id: cityName,
+      searchBarValue: null,
+      filteredCitySodexoPartners: null,
     }
   },
   mounted() {
@@ -99,9 +132,21 @@ export default {
           postalCodes: data.post_code,
           sodexoPartners: JSON.parse(JSON.parse(data.sodexo_partners)),
       };
-      console.log(data);
-      console.log(this.cityDetailData);
-    }
+      this.filteredCitySodexoPartners = this.cityDetailData.sodexoPartners;
+      //console.log(data);
+      //console.log(this.cityDetailData);
+    },
+    searchBarValueAdjusted () {
+      console.log('searchBarValueAdjusted');
+      console.log(this.searchBarValue);
+      this.filteredCitySodexoPartners = this.cityDetailData.sodexoPartners.filter((partner) => { 
+        return partner.name.toLowerCase().includes(this.searchBarValue.toLowerCase()); 
+      });
+      console.log('cityDetailData.sodexoPartners');
+      console.log(this.cityDetailData.sodexoPartners.length);
+      console.log('filteredCitySodexoPartners');
+      console.log(this.filteredCitySodexoPartners.length);
+    },
   }
 //});
 };
