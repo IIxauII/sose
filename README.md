@@ -9,6 +9,7 @@ The idea for this project came up after trying to utilize the existing sodexo se
 * https://apps.apple.com/de/app/restaurant-pass/id1541655392
 
 I was not satisfied with the user exerience in the webbrowser and wanted to achieve a unified solution for all end devices.
+Also needed an excuse to learn ionic 😅
 
 ## Backend
 
