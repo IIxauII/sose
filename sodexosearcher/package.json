@@ -2,6 +2,7 @@
   "name": "sodexosearcher",
   "version": "0.0.1",
   "private": true,
+  "description": "An Ionic project",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -24,6 +25,7 @@
     "cordova-plugin-advanced-http": "^3.2.0",
     "cordova-plugin-file": "^6.0.2",
     "core-js": "^3.6.5",
+    "register-service-worker": "^1.7.1",
     "vue": "^3.0.0-0",
     "vue-resource": "^1.5.3",
     "vue-router": "^4.0.0-0"
@@ -37,6 +39,7 @@
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-e2e-cypress": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-pwa": "^4.5.13",
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-plugin-unit-jest": "~4.5.0",
@@ -48,6 +51,5 @@
     "eslint-plugin-vue": "^7.0.0-0",
     "typescript": "~3.9.3",
     "vue-jest": "^5.0.0-0"
-  },
-  "description": "An Ionic project"
+  }
 }
