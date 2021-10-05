@@ -19,15 +19,15 @@ Since sodexo does not offer any public API endpoints for consumption of AKP data
 This service utilizes `webdriverIO` to scrape the https://www.sodexo-akp.de/Sites/GeoCoding/affiliateSearch.aspx search service.
 It searches for AKP data in a specific city and downloads the HTML elements which containt the necessary data to an .html file in the `/results` folder for further processing.
 Example Usages:
-headless example: `npm run scrape Karlsruhe`
-with GUI: `npm run scrape Karlsruhe true`
+* headless example: `npm run scrape Karlsruhe`
+* with GUI: `npm run scrape Karlsruhe true`
 
 ### processor
 This service loads all `.html` files which are stored under `/scraper/results` and utilizes `cheerio` to find AKP restaurant name & address in the HTML code.
 The data is then being gathered for each partner and stored in JSON format in the `/results` folder. The city name is saved in the filename.
 
 Example Usage:
-`npm run process`
+* `npm run process`
 
 
 ### saver
@@ -40,8 +40,8 @@ If the data being processed is a new city, a new row will be created in the data
 IF the data being processed is an existing city, the AKP data for this row will be updated in the database.
 
 Example Usage:
-`npm run setup`
-`npm run save`
+* `npm run setup`
+* `npm run save`
 
 ### api
 This API is built using `koa.js`, a lightweight web framework created from the makers of express.js.
@@ -52,16 +52,16 @@ It provides AKP data from the database to the frontend & the possibly to trigger
 This API is still work in progress.
 
 Endpoints (WIP):
-`GET /api/cities`
-`GET /api/cities/{cityName}`
-`POST /api/cities/{cityName}`
+* `GET /api/cities`
+* `GET /api/cities/{cityName}`
+* `POST /api/cities/{cityName}`
 
 ### shellscripts
 This folder contains shellscripts to simply processes which are needed during project runtime or setup.
 
 Current scripts:
-The `addACity.sh` is being used by the koa.js api to trigger a scrape/process/save flow when a request comes in to add a new city.
-The `setupProject.sh` is being used to simply initial project setup.
+* The `addACity.sh` is being used by the koa.js api to trigger a scrape/process/save flow when a request comes in to add a new city.
+* The `setupProject.sh` is being used to simply initial project setup.
 
 ## Frontend
 
