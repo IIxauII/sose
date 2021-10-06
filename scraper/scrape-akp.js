@@ -100,7 +100,7 @@ longRunningAborter();
                 }
             },
             logLevel: 'warn',
-            //port: 4444,
+            port: 4444,
         }).catch((err) => {
             console.log('chrome headless start error!');
             console.error(err);
