@@ -53,6 +53,7 @@ function longRunningAborter() {
     }, maxRunTime * 1000);
 }
 
+// just a test, did not work out, using a service is better :sweat:
 function startChromedriver() {
     exec("chromedriver --port=4444", (error, stdout, stderr) => {
         if (error) {
@@ -66,10 +67,6 @@ function startChromedriver() {
         console.log('stdout', stdout);
     })
 }
-
-startChromedriver();
-
-process.exit(0);
 
 if (process.argv.length === 2) {
     toFewArguments = true;
