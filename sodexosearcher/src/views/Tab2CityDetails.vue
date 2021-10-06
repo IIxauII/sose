@@ -98,7 +98,7 @@ export default {
   mounted() {
     console.log('mounted');
     console.log(this.id);
-    const apiEndpoint = 'http://localhost:1337/api/cities/' + this.id;
+    const apiEndpoint = process.env.VUE_APP_API_ENDPOINT + 'cities/' + this.id;
 
     // for ios & android
     HTTP.get(apiEndpoint, {}, {})
