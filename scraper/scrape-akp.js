@@ -20,7 +20,7 @@ const { remote } = require('webdriverio');
 const { default: $ } = require('webdriverio/build/commands/browser/$');
 const fs = require('fs');
 const scrapeConfig = require('./config/scrape-config.json');
-const { exec } = erquire('child_process');
+const { exec } = require('child_process');
 
 let browser;
 
