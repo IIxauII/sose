@@ -13,6 +13,7 @@ app.on('error', (err, ctx) => {
 });
 
 app
+    .use(cors())
     .use(ratelimit({
         driver: 'memory',
         db: db,
@@ -33,7 +34,6 @@ app
             return false;
         },
     }))
-    .use(cors())
     .use(logger())
     .use(body())
     .use(router.routes())
