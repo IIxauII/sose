@@ -67,6 +67,8 @@ function startChromedriver() {
     })
 }
 
+startChromedriver();
+
 if (process.argv.length === 2) {
     toFewArguments = true;
     console.log('No arguments provided! Aborting!');
@@ -94,7 +96,6 @@ if (process.argv.length === 2) {
 
 // tracks time process has run, terminates process if time exceeds max
 longRunningAborter();
-startChromedriver();
 
 (async () => {
 
