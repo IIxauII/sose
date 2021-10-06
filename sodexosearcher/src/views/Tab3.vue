@@ -63,7 +63,7 @@ export default  {
       if (!this.cityInputValue) { return; }
       const cityToAdd = this.cityInputValue;
       this.showLoader();
-      const apiEndpoint = 'http://localhost:1337/api/cities/' + cityToAdd;
+      const apiEndpoint = process.env.VUE_APP_API_ENDPOINT + 'cities/' + cityToAdd;
 
       // for ios & android
       HTTP.post(apiEndpoint, {}, {})
