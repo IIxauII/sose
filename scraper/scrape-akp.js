@@ -100,7 +100,10 @@ longRunningAborter();
                 }
             },
             logLevel: 'warn',
-        });
+        }).catch((err) => {
+            console.log('chrome headless start error!');
+            console.error(err);
+        })
     }
 
     // open sodexo search url
