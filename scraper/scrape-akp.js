@@ -69,6 +69,8 @@ function startChromedriver() {
 
 startChromedriver();
 
+process.exit(0);
+
 if (process.argv.length === 2) {
     toFewArguments = true;
     console.log('No arguments provided! Aborting!');
