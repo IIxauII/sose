@@ -20,6 +20,7 @@ const { remote } = require('webdriverio');
 const { default: $ } = require('webdriverio/build/commands/browser/$');
 const fs = require('fs');
 const scrapeConfig = require('./config/scrape-config.json');
+const { exec } = erquire('child_process');
 
 let browser;
 
@@ -52,6 +53,20 @@ function longRunningAborter() {
     }, maxRunTime * 1000);
 }
 
+function startChromedriver() {
+    exec("chromedriver --port=4444", (error, stdout, stderr) => {
+        if (error) {
+            console.log('error', error);
+            return;
+        }
+        if (stderr) {
+            console.log('stderr', stderr);
+            return;
+        }
+        console.log('stdout', stdout);
+    })
+}
+
 if (process.argv.length === 2) {
     toFewArguments = true;
     console.log('No arguments provided! Aborting!');
@@ -79,6 +94,7 @@ if (process.argv.length === 2) {
 
 // tracks time process has run, terminates process if time exceeds max
 longRunningAborter();
+startChromedriver();
 
 (async () => {
 
