@@ -60,8 +60,10 @@ Endpoints (WIP):
 This folder contains shellscripts to simply processes which are needed during project runtime or setup.
 
 Current scripts:
-* The `addACity.sh` is being used by the koa.js api to trigger a scrape/process/save flow when a request comes in to add a new city.
-* The `setupProject.sh` is being used to simply initial project setup.
+* `addACity.sh` is being used by the koa.js api to trigger a scrape/process/save flow when a request comes in to add a new city.
+* `setupProject.sh` is being used to simply initial project setup.
+* `showCaseDeploy.sh` helps with fetching new changes, building ionic & deploying as PWA to the webserver folder
+* `updateCerts.sh` renews certificates, copies new certs to project, restarts api service to ensure new certs are being used 
 
 ## Frontend
 
