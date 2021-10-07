@@ -11,12 +11,7 @@ sudo cp -v $CERTSDIR/privkey.pem /home/sose/sose/certs/;
 # adjust permissions
 echo "Adjusting file permissions";
 sudo chmod -R ugo+r /home/sose/sose/certs;
-# kills forever running api.js
-echo "Stopping api server";
-forever stop api.js;
-# start forever api.js again with the new files
-echo "Starting api server!";
-cd /home/sose/sose/api/;
-forever start api.js;
+echo "Restarting all forever scripts";
+forever restartall;
 forever list;
 echo "done";
