@@ -5,7 +5,9 @@ echo "Updating certs & restarting api server!";
 sudo certbot renew;
 # copy certs into project folder for usage in api server
 CERTSDIR='/etc/letsencrypt/live/sose.bounceme.net';
-sudo rsync —-copy-links $CERTSDIR/fullchain.pem $CERTSDIR/privkey.pem /home/sose/sose/certs;
+#sudo rsync —-copy-links $CERTSDIR/fullchain.pem $CERTSDIR/privkey.pem /home/sose/sose/certs/;
+sudo cp $CERTSDIR/fullchain.pem /home/sose/sose/certs/;
+sudo cp $CERTSDIR/privkey.pem /home/sose/sose/certs/;
 # adjust permissions
 sudo chmod -R ugo+r /home/sose/sose/certs;
 # kills forever running api.js
