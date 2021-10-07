@@ -18,4 +18,5 @@ forever stop api.js;
 echo "Starting api server!";
 cd /home/sose/sose/api/;
 forever start api.js;
+forever list;
 echo "done";
