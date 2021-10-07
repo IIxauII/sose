@@ -11,5 +11,6 @@ sudo chmod -R ugo+r /home/sose/sose/certs;
 # kills forever running api.js
 forever stop api.js;
 # start forever api.js again with the new files
-forever start api.ja;
+cd /home/sose/sose/api/;
+forever start api.js;
 echo "Done updating certs & restarting api";
