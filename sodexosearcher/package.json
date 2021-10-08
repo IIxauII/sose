@@ -5,6 +5,7 @@
   "description": "An Ionic project",
   "scripts": {
     "serve": "vue-cli-service serve",
+    "serve:showcase": "vue-cli-service serve --mode showcase",
     "build": "vue-cli-service build",
     "build:showcase": "vue-cli-service build --mode showcase",
     "test:unit": "vue-cli-service test:unit",
