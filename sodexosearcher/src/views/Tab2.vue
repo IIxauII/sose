@@ -1,10 +1,8 @@
 <template>
   <ion-page>
-    <ion-header translucent>
-      <ion-toolbar>
-        <ion-title>Cities</ion-title>
-      </ion-toolbar>
-    </ion-header>
+    <default-header
+      headerTitle='Cities'
+    ></default-header>
     <ion-content fullscreen>
       <ion-searchbar
         debounce="250"
@@ -33,23 +31,29 @@
 
 import {
   IonPage,
-  IonToolbar,
-  IonTitle,
-  IonHeader,
   IonContent,
   IonItem,
   IonList,
   IonLabel,
   IonSearchbar,
 } from "@ionic/vue";
+import DefaultHeader from '../components/global/DefaultHeader.vue';
 import { HTTP } from '@ionic-native/http';
 import axios from 'axios';
-//import { defineComponent } from "@vue/runtime-core";
+
 
 //export default defineComponent({
 export default {
   name: "Tab2",
-  components: { IonPage, IonToolbar, IonTitle, IonHeader, IonContent, IonItem, IonList, IonLabel, IonSearchbar },
+  components: {
+    IonPage,
+    IonContent,
+    IonItem,
+    IonList,
+    IonLabel,
+    IonSearchbar,
+    DefaultHeader,
+  },
   data() {
     return {
       filteredSodexoData: null,
