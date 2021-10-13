@@ -1,14 +1,9 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-            <ion-back-button default-href="/tabs/tab2"></ion-back-button>
-        </ion-buttons>
-        <ion-title>{{ id }}</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
+    <default-header
+      :headerTitle='id'
+      :showBackButton='true'
+    ></default-header>
     <ion-content fullscreen>
       <ion-searchbar
         debounce="250"
@@ -39,19 +34,15 @@
 <script lang="js">
 import {
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
   IonList,
   IonItem,
-  IonBackButton,
-  IonButtons,
   IonButton,
   IonLabel,
   IonIcon,
   IonSearchbar,
 } from "@ionic/vue";
+import DefaultHeader from '../components/global/DefaultHeader.vue';
 import { map } from 'ionicons/icons';
 import { useRoute } from 'vue-router';
 import { HTTP } from '@ionic-native/http';
@@ -63,18 +54,14 @@ export default {
   name: "Tab2CityDetails",
   components: {
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
   IonList,
   IonItem,
-  IonBackButton,
-  IonButtons,
   IonButton,
   IonLabel,
   IonIcon,
   IonSearchbar,
+  DefaultHeader,
 },
   setup() {
     return {

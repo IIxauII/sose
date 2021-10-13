@@ -1,10 +1,8 @@
 <template>
   <ion-page>
-     <ion-header translucent>
-      <ion-toolbar>
-        <ion-title>Request a new city</ion-title>
-      </ion-toolbar>
-    </ion-header>
+    <default-header
+      headerTitle='Add a new city'
+    ></default-header>
     <ion-content>
       <ion-grid>
         <ion-row justify-content-center align-items-center>
@@ -24,9 +22,6 @@
 <script lang="js">
 import { 
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
   IonInput,
   IonButton,
@@ -35,6 +30,7 @@ import {
   loadingController,
   toastController,
 } from '@ionic/vue'
+import DefaultHeader from '../components/global/DefaultHeader.vue';
 import { HTTP } from '@ionic-native/http';
 import axios from 'axios';
 
@@ -42,14 +38,12 @@ export default  {
   name: 'Tab3',
   components: {
     IonPage,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
     IonContent,
     IonInput,
     IonButton,
     IonGrid,
     IonRow,
+    DefaultHeader
   },
   data() {
     return {
