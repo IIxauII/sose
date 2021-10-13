@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --watch src --exec npm run server",
-    "server": "node api.js"
+    "server": "node api.js",
+    "server:http": "npm run server",
+    "server:https": "npm run server 'https'"
   },
   "keywords": [],
   "author": "",

@@ -10,17 +10,29 @@ const path = require('path');
 const app = new Koa();
 const router = require('./routes/index');
 const db = new Map();
-const httpsConfig = {
-    domain: 'sose.bounceme.net',
-    https: {
-        port: 1337,
-        options: {
-            key: fs.readFileSync(path.resolve(process.cwd(), '../certs/privkey.pem'), 'utf8').toString(),
-            cert: fs.readFileSync(path.resolve(process.cwd(), '../certs/fullchain.pem'), 'utf8').toString(),
+let httpsConfig;
+let appCallBack;
+let enableHttps = false;
+
+if (process.argv.length === 3 && process.argv[2] === 'https') {
+    console.log('enabling https');
+    enableHttps = true;
+}
+
+if (enableHttps) {
+    httpsConfig = {
+        domain: 'sose.bounceme.net',
+        https: {
+            port: 1337,
+            options: {
+                key: fs.readFileSync(path.resolve(process.cwd(), '../certs/privkey.pem'), 'utf8').toString(),
+                cert: fs.readFileSync(path.resolve(process.cwd(), '../certs/fullchain.pem'), 'utf8').toString(),
+            },
         },
-    },
-};
-const appCallBack = app.callback();
+    };
+    appCallBack = app.callback();
+}
+
 
 app.on('error', (err, ctx) => {
     console.error('server error', err, ctx);
@@ -53,18 +65,20 @@ app
     .use(router.routes())
     .use(router.allowedMethods());
 
-app.listen(1336);
-
-try {
-    const HttpsApp = https.createServer(httpsConfig.https.options, appCallBack);
-    HttpsApp.listen(httpsConfig.https.port, (err) => {
-        if (!!err) {
-            console.error('HTTPS app fail', err);
-        } else {
-            console.log(`HTTPS app ok: https://${httpsConfig.domain}:${httpsConfig.https.port}`);
-        }
-    })
-
-} catch(err) {
-    console.error('HTTPS app start failed', err);
+if (enableHttps) {
+    try {
+        const HttpsApp = https.createServer(httpsConfig.https.options, appCallBack);
+        HttpsApp.listen(httpsConfig.https.port, (err) => {
+            if (!!err) {
+                console.error('HTTPS app fail', err);
+            } else {
+                console.log(`HTTPS app ok: https://${httpsConfig.domain}:${httpsConfig.https.port}`);
+            }
+        })
+    
+    } catch(err) {
+        console.error('HTTPS app start failed', err);
+    }
+} else {
+    app.listen(1336);
 }
