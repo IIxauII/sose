@@ -9,7 +9,11 @@
         animated
         v-model="searchBarValue"
         @ionChange="searchBarValueAdjusted()"
-      ></ion-searchbar>
+      >
+        <ion-badge 
+          color="primary"
+        >{{ filteredSodexoData.length }}</ion-badge>
+      </ion-searchbar>
       <ion-list>
         <ion-item 
         v-for="city in filteredSodexoData"
@@ -36,6 +40,7 @@ import {
   IonList,
   IonLabel,
   IonSearchbar,
+  IonBadge,
 } from "@ionic/vue";
 import DefaultHeader from '../components/global/DefaultHeader.vue';
 import { HTTP } from '@ionic-native/http';
@@ -53,6 +58,7 @@ export default {
     IonLabel,
     IonSearchbar,
     DefaultHeader,
+    IonBadge,
   },
   data() {
     return {
