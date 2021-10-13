@@ -10,7 +10,11 @@
         animated
         v-model="searchBarValue"
         @ionChange="searchBarValueAdjusted()"
-      ></ion-searchbar>
+      >
+        <ion-badge 
+          color="primary"
+        >{{ filteredCitySodexoPartners.length }}</ion-badge>
+      </ion-searchbar>
       <ion-list>
         <ion-item
           v-for="(partner, index) in filteredCitySodexoPartners"
@@ -79,7 +83,7 @@ export default {
       },
       id: cityName,
       searchBarValue: null,
-      filteredCitySodexoPartners: null,
+      filteredCitySodexoPartners: [],
     }
   },
   mounted() {

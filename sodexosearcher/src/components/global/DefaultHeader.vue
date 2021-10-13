@@ -5,7 +5,7 @@
           v-if='showBackButton'
           slot='start'
         >
-            <ion-back-button v-bind:default-href='backButtonLink'></ion-back-button>
+          <ion-back-button v-bind:default-href='backButtonLink'></ion-back-button>
         </ion-buttons>
         <ion-title>{{ headerTitle }}</ion-title>
       </ion-toolbar>
@@ -16,7 +16,7 @@
 import {
  IonHeader,
  IonToolbar,
- IonTitle,   
+ IonTitle,
 } from '@ionic/vue';
 
 export default {
