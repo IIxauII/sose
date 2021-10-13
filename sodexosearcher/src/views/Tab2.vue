@@ -17,12 +17,12 @@
       <ion-list>
         <ion-item 
         v-for="city in filteredSodexoData"
-        v-bind:key="city.name"
+        v-bind:key="city"
         button
-        @click="cityClicked(city.name)"
-        v-bind:href="'/tabs/tab2/' + city.name">
+        @click="cityClicked(city)"
+        v-bind:href="'/tabs/tab2/' + city">
           <ion-label>
-            {{ city.name }}
+            {{ city }}
           </ion-label>
         </ion-item>
       </ion-list>
@@ -62,7 +62,7 @@ export default {
   },
   data() {
     return {
-      filteredSodexoData: null,
+      filteredSodexoData: [],
       sodexoData: null,
       searchBarValue: null,
     }
@@ -97,7 +97,7 @@ export default {
     updateSodexoData (newValue) {
       console.log('updateSodexoData');
       console.log(newValue.data)
-      this.sodexoData = newValue.data.sort((a, b) => a.name.localeCompare(b.name));
+      this.sodexoData = newValue.data.sort((a, b) => a.localeCompare(b));
       this.filteredSodexoData = this.sodexoData;
     },
     cityClicked (clickedCity) {
@@ -108,7 +108,7 @@ export default {
       console.log('searchBarValueAdjusted');
       console.log(this.searchBarValue);
       this.filteredSodexoData = this.sodexoData.filter((city) => { 
-        return city.name.toLowerCase().includes(this.searchBarValue.toLowerCase()); 
+        return city.toLowerCase().includes(this.searchBarValue.toLowerCase()); 
       });
     }
   }

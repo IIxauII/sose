@@ -17,6 +17,8 @@ import {
  IonHeader,
  IonToolbar,
  IonTitle,
+ IonBackButton,
+ IonButtons,
 } from '@ionic/vue';
 
 export default {
@@ -25,6 +27,8 @@ export default {
      IonHeader,
      IonToolbar,
      IonTitle,
+     IonBackButton,
+     IonButtons,
  },
  props: {
    headerTitle: {
