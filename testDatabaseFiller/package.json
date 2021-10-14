@@ -1,5 +1,5 @@
 {
-  "name": "test",
+  "name": "testDatabaseFiller",
   "version": "1.0.0",
   "description": "",
   "main": "addAllTowns.js",
