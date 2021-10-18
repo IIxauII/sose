@@ -46,8 +46,6 @@ import DefaultHeader from '../components/global/DefaultHeader.vue';
 import { HTTP } from '@ionic-native/http';
 import axios from 'axios';
 
-
-//export default defineComponent({
 export default {
   name: "Tab2",
   components: {
@@ -107,11 +105,11 @@ export default {
     searchBarValueAdjusted () {
       console.log('searchBarValueAdjusted');
       console.log(this.searchBarValue);
+      const lowerCaseSearchBarValue = this.searchBarValue.toLowerCase();
       this.filteredSodexoData = this.sodexoData.filter((city) => { 
-        return city.toLowerCase().includes(this.searchBarValue.toLowerCase()); 
+        return city.toLowerCase().includes(lowerCaseSearchBarValue); 
       });
     }
   }
-//});
 };
 </script>
