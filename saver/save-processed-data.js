@@ -64,12 +64,15 @@ fs.readdir(serverConfig.input.path, {}, async (err, fileNames) => {
                 name = name.substring(name.indexOf('-') + 1);
                 name = name[0].toUpperCase() + name.substring(1);
                 
+                // TODO: here api integration for fetching postalCode & here_id
                 let postalCode = '000';
 
                 let partners = JSON.stringify(data).replace(/'/g, "");
 
                 //process.exit(1);
                 //preparedQuery += `'${name}', '${postalCode}', '${partners}', `;
+
+                // TODO: extend SQL statement with here_id (requires here api integration)
                 preparedQuerys.push(`REPLACE INTO cities VALUES ('${name}', '${postalCode}', '${partners}')`);
 
                 //deleting now processed .json file
