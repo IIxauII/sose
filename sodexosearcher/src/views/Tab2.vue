@@ -103,6 +103,7 @@ export default {
       console.log(clickedCity);
     },
     searchBarValueAdjusted () {
+      // might want to change this to a computed property
       console.log('searchBarValueAdjusted');
       console.log(this.searchBarValue);
       const lowerCaseSearchBarValue = this.searchBarValue.toLowerCase();
