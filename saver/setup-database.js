@@ -11,8 +11,8 @@ open({
 
     // creates database table structure
     // cities
-    // name | post_code | sodexo_partners
-    await db.exec('CREATE TABLE cities (name TEXT, post_code INT, sodexo_partners TEXT, unique (name, post_code))')
+    // name | post_code | sodexo_partners | here_id
+    await db.exec('CREATE TABLE cities (name TEXT, post_code INT, sodexo_partners TEXT, here_id TEXT, unique (name, post_code))');
 
     //await db.exec('DROP TABLE cities');
 
