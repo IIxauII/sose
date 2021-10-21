@@ -14,6 +14,7 @@
           color="primary"
         >{{ filteredSodexoData.length }}</ion-badge>
       </ion-searchbar>
+      <!-- we need to add infinite scroll here to tackle performance issues caused by rendering: https://ionicframework.com/docs/api/infinite-scroll -->
       <ion-list>
         <ion-item 
         v-for="city in filteredSodexoData"
