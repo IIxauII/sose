@@ -1,4 +1,13 @@
 {
     "info": "https://www.here.com/",
-    "apiKey": "enter your api key here"
+    "apiKey": "enter your api key here",
+    "baseUrl": "https://geocode.search.hereapi.com/v1/",
+    "endpoints": {
+        "geocode": "geocode"
+    },
+    "queryStrings": {
+        "query": "?q=",
+        "germany": " Deutschland",
+        "apiKey": "&apiKey="
+    }
 }
