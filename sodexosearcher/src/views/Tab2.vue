@@ -14,10 +14,9 @@
           color="primary"
         >{{ filteredSodexoData.length }}</ion-badge>
       </ion-searchbar>
-      <!-- we need to add infinite scroll here to tackle performance issues caused by rendering: https://ionicframework.com/docs/api/infinite-scroll -->
       <ion-list>
         <ion-item 
-        v-for="city in filteredSodexoData"
+        v-for="city in infiniteScrollSodexoData"
         v-bind:key="city"
         button
         @click="cityClicked(city)"
@@ -27,6 +26,17 @@
           </ion-label>
         </ion-item>
       </ion-list>
+      <ion-infinite-scroll
+        @ionInfinite='loadInfiniteScrollData($event)'
+        threshold='100px'
+        id='infinite-scroll'
+        :disabled='infiniteScrollIsDisabled'
+      >
+        <ion-infinite-scroll-content
+          loading-spinner='bubbles'
+          loading-text='Loading more data...'
+        ></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
     </ion-content>
   </ion-page>
 </template>
@@ -42,6 +52,8 @@ import {
   IonLabel,
   IonSearchbar,
   IonBadge,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
 } from "@ionic/vue";
 import DefaultHeader from '../components/global/DefaultHeader.vue';
 import { HTTP } from '@ionic-native/http';
@@ -58,9 +70,13 @@ export default {
     IonSearchbar,
     DefaultHeader,
     IonBadge,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent,
   },
   data() {
     return {
+      infiniteScrollIsDisabled: false,
+      infiniteScrollSodexoData: [],
       filteredSodexoData: [],
       sodexoData: null,
       searchBarValue: null,
@@ -72,32 +88,25 @@ export default {
     // for ios & android
     HTTP.get(apiEndpoint, {}, {})
       .then((res) => {
-        console.log('cordova http');
-        console.log(res);
         this.updateSodexoData(res);
       })
       .catch((err) => {
-        console.log(err);
-        console.log(err.status);
-
+        console.error(err);
         // if cordove not available, try to use axios (e.g. webbrowser enddevice)
         axios.get(apiEndpoint)
           .then((res) => {
-            console.log('axios http');
-            console.log(res);
             this.updateSodexoData(res);
           })
           .catch((err) => {
-            console.log(err);
+            console.error(err);
           })
       })
   },
   methods: {
     updateSodexoData (newValue) {
-      console.log('updateSodexoData');
-      console.log(newValue.data)
       this.sodexoData = newValue.data.sort((a, b) => a.localeCompare(b));
       this.filteredSodexoData = this.sodexoData;
+      this.loadInfiniteScrollData();
     },
     cityClicked (clickedCity) {
       console.log('cityClicked');
@@ -105,12 +114,36 @@ export default {
     },
     searchBarValueAdjusted () {
       // might want to change this to a computed property
-      console.log('searchBarValueAdjusted');
-      console.log(this.searchBarValue);
       const lowerCaseSearchBarValue = this.searchBarValue.toLowerCase();
       this.filteredSodexoData = this.sodexoData.filter((city) => { 
         return city.toLowerCase().includes(lowerCaseSearchBarValue); 
       });
+      this.resetInfiniteScrollData();
+    },
+    loadInfiniteScrollData (event) {
+      // default loading amount 25
+      let loadDataAmount = 25;
+      // if the rest data to be loaded is less than the default amount, adjust to not load empty items
+      if (this.filteredSodexoData.length - this.infiniteScrollSodexoData.length <= loadDataAmount) {
+        loadDataAmount = this.filteredSodexoData.length - this.infiniteScrollSodexoData.length;
+      }
+      const max = this.infiniteScrollSodexoData.length + loadDataAmount;
+      const min = max - loadDataAmount;
+      for (let x = min; x < max; x++) {
+        this.infiniteScrollSodexoData.push(this.filteredSodexoData[x]);
+      }
+      if (event) {
+        event.target.complete();
+      }
+      // if we have loaded all available data disabled infinite loading event
+      if (this.infiniteScrollSodexoData.length >= this.filteredSodexoData.length) {
+        this.infiniteScrollIsDisabled = true;
+      }
+    },
+    resetInfiniteScrollData() {
+      this.infiniteScrollSodexoData = [];
+      this.loadInfiniteScrollData();
+      this.infiniteScrollIsDisabled = false;
     }
   }
 };
