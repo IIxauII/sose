@@ -21,7 +21,41 @@ open({
     console.log(onlyCityNames);
     const hereGeocodeEndpoint = 'https://geocode.search.hereapi.com/v1/geocode';
     const hereApiKey = '&apiKey=' + hereConfig.apiKey;
-    onlyCityNames.forEach((cityName) => {
+
+    let x = 0;
+    function fetchAndSaveToDb() {
+      let cityName = onlyCityNames[x];
+      console.log('Adding', cityName);
+      const hereGeocodeQuery = '?q=' + urlencode(cityName) + ' Deutschland';
+      const hereApiCall = hereGeocodeEndpoint + hereGeocodeQuery + hereApiKey;
+      console.log(hereApiCall);
+      axios.get(hereApiCall)
+        .then(async (res) => {
+          console.log('---');
+          console.log(cityName);
+          console.log(res.data.items[0].id);
+          console.log('---');
+          console.log('updating db entry with post_code & here_id for', cityName);
+          await db.exec(`UPDATE cities SET post_code = '${res.data.items[0].address.postalCode}', here_id = '${res.data.items[0].id}' WHERE name = '${cityName}';`);
+        })
+        .catch((err) => {
+          console.log('---');
+          console.log(cityName);
+          console.log(err);
+          console.log('---');
+        })
+      ++x;
+      if (x <= onlyCityNames.length - 1) {
+        setTimeout(() => {
+          fetchAndSaveToDb();
+        }, 500);
+      } else {
+        console.log('Done!');
+      }
+    }
+
+    fetchAndSaveToDb();
+   /*  onlyCityNames.forEach((cityName) => {
         const hereGeocodeQuery = '?q=' + urlencode(cityName) + ' Deutschland';
         const hereApiCall = hereGeocodeEndpoint + hereGeocodeQuery + hereApiKey;
         console.log(hereApiCall);
@@ -41,7 +75,8 @@ open({
             console.log('---');
           })
     });
-    // TODO: Close database in a clean way using promises
+    */
+    //TODO: Close database in a clean way using promises
 }).catch((err) => {
     throw err;
 })
