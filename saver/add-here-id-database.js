@@ -25,6 +25,7 @@ open({
     let x = 0;
     function fetchAndSaveToDb() {
       let cityName = onlyCityNames[x];
+      console.log(`${x+1} of ${onlyCityNames.length}`);
       console.log('Adding', cityName);
       const hereGeocodeQuery = '?q=' + urlencode(cityName) + ' Deutschland';
       const hereApiCall = hereGeocodeEndpoint + hereGeocodeQuery + hereApiKey;
