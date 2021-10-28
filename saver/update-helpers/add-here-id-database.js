@@ -2,8 +2,8 @@ const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
 const axios = require('axios');
 const urlencode = require('urlencode');
-const hereConfig = require('../configs/here.json');
-const serverConfig = require('./config/saver-config.json');
+const hereConfig = require('../../configs/here.json');
+const serverConfig = require('../config/saver-config.json');
 
 sqlite3.verbose();
 open({
