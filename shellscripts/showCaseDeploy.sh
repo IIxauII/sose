@@ -17,4 +17,6 @@ npm run build:showcase;
 echo "Deploying new showcase build!";
 cp -R dist/* /var/www/html/;
 echo "sose deploy done!";
+echo "";
+echo "Do not forget to restart / udpate api service aswell! This needs to happen manually for now!";
 #
