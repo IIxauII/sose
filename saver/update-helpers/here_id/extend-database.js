@@ -1,6 +1,6 @@
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
-const serverConfig = require('./config/saver-config.json');
+const serverConfig = require('../../config/saver-config.json');
 
 // TODO: include this in `setup-database` 
 //       OR 
@@ -10,7 +10,7 @@ const serverConfig = require('./config/saver-config.json');
 
 sqlite3.verbose();
 open({
-    filename: serverConfig.db.path + serverConfig.db.name,
+    filename: '../../' + serverConfig.db.path + serverConfig.db.name,
     driver: sqlite3.Database
 }).then(async (db) => {
     console.log('DB connection is up, ready for saving new data!');
