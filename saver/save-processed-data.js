@@ -6,6 +6,8 @@ const urlencode = require('urlencode');
 const serverConfig = require('./config/saver-config.json');
 const hereConfig = require('../configs/here.json');
 
+// TODO: add functionality which is already existing in 'add-geo-data-partners-database into here!!!!'
+
 async function openAndReturnDB() {
     sqlite3.verbose();
     let db = new sqlite3.Database(serverConfig.db.path + serverConfig.db.name, sqlite3.OPEN_READWRITE, (err) => {
