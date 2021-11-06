@@ -21,11 +21,15 @@ module.exports = {
                             if (err) {
                                 reject(err);
                             }
-                            let onlyCityNames = [];
+                            let cityData = [];
                             data.forEach((city) => {
-                                onlyCityNames.push(city.name);
+                                cityData.push({
+                                    name: city.name,
+                                    lat: city.lat,
+                                    lng: city.lng,
+                                });
                             });
-                            resolve(onlyCityNames);
+                            resolve(cityData);
                             await dbConnector.closeDB(db);
                         });
                     })
