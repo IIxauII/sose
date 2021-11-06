@@ -16,14 +16,19 @@
       </ion-searchbar>
       <ion-list>
         <ion-item 
-        v-for="city in infiniteScrollSodexoData"
-        v-bind:key="city"
+        v-for="(city, index) in infiniteScrollSodexoData"
+        v-bind:key="index"
         button
-        @click="cityClicked(city)"
-        v-bind:href="'/tabs/tab2/' + city">
+        @click="cityClicked(city.name)"
+        v-bind:href="'/tabs/tab2/' + city.name">
           <ion-label>
-            {{ city }}
+            {{ city.name }}
           </ion-label>
+          <ion-note
+            v-if="city.distance"
+          >
+            {{ city.distance }} km
+          </ion-note>
         </ion-item>
       </ion-list>
       <ion-infinite-scroll
@@ -54,7 +59,9 @@ import {
   IonBadge,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
+  IonNote,
 } from "@ionic/vue";
+import { geolocation } from '@ionic-native/geolocation';
 import DefaultHeader from '../components/global/DefaultHeader.vue';
 import { HTTP } from '@ionic-native/http';
 import axios from 'axios';
@@ -72,6 +79,7 @@ export default {
     IonBadge,
     IonInfiniteScroll,
     IonInfiniteScrollContent,
+    IonNote,
   },
   data() {
     return {
@@ -80,6 +88,11 @@ export default {
       filteredSodexoData: [],
       sodexoData: null,
       searchBarValue: null,
+      currentPos: {
+        lat: null,
+        lng: null,
+      },
+      sortViaGeo: false,
     }
   },
   mounted() {
@@ -101,12 +114,25 @@ export default {
             console.error(err);
           })
       })
+
+    this.fetchGeoLocation();
   },
   methods: {
     updateSodexoData (newValue) {
-      this.sodexoData = newValue.data.sort((a, b) => a.localeCompare(b));
-      this.filteredSodexoData = this.sodexoData;
-      this.loadInfiniteScrollData();
+      if (newValue) {
+        if (this.sortViaGeo) {
+          this.sodexoData = this.sodexoData.map((city) => ({...city, distance: Math.round(this.calcDistance(city))}));
+          this.sodexoData = this.sodexoData.sort((a, b) => a.distance - b.distance);
+          this.filteredSodexoData = this.sodexoData;
+          this.resetInfiniteScrollData();
+          console.log(this.currentPos);
+          console.log(this.sodexoData);
+        } else {
+          this.sodexoData = newValue.data.sort((a, b) => a.name.localeCompare(b.name));
+          this.filteredSodexoData = this.sodexoData;
+          this.loadInfiniteScrollData();
+        }
+      }
     },
     cityClicked (clickedCity) {
       console.log('cityClicked');
@@ -116,7 +142,7 @@ export default {
       // might want to change this to a computed property
       const lowerCaseSearchBarValue = this.searchBarValue.toLowerCase();
       this.filteredSodexoData = this.sodexoData.filter((city) => { 
-        return city.toLowerCase().includes(lowerCaseSearchBarValue); 
+        return city.name.toLowerCase().includes(lowerCaseSearchBarValue); 
       });
       this.resetInfiniteScrollData();
     },
@@ -144,7 +170,42 @@ export default {
       this.infiniteScrollSodexoData = [];
       this.loadInfiniteScrollData();
       this.infiniteScrollIsDisabled = false;
-    }
+    },
+    fetchGeoLocation() {
+      console.log('fetchGeoLocation');
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+          console.log('navigator.geolocation', pos);
+          if (pos.coords) {
+            this.currentPos.lat = pos.coords.latitude;
+            this.currentPos.lng = pos.coords.longitude;
+            this.sortViaGeo = true;
+            // retrigger update to sort via geo
+            this.updateSodexoData(this.sodexoData);
+          }
+        });
+      } else {
+        // unsure if this will work 
+        // for ios some changes need to be made
+        // https://ionicframework.com/docs/native/geolocation
+        geolocation.getCurrentPosition().then((res) => {
+          console.log('geoRes', res);
+        }).catch((err) => {
+          console.log('error', err);
+        });
+      }
+    },
+    calcDistance(city) {
+      const lat2 = city.lat;
+      const lng2 = city.lng;
+      const p = 0.017453292519943295;    // Math.PI / 180
+      const c = Math.cos;
+      const a = 0.5 - c((lat2 - this.currentPos.lat) * p)/2 + 
+              c(this.currentPos.lat * p) * c(lat2 * p) * 
+              (1 - c((lng2 - this.currentPos.lng) * p))/2;
+
+      return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
+    },
   }
 };
 </script>
