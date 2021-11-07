@@ -152,31 +152,9 @@ export default {
     updateCityDetailData (newValue) {
       console.log('updateCityDetailData');
       if (newValue) {
-        console.log('newValue', newValue);
-        if (newValue.data && newValue.data.length) {
-          const data = newValue.data[0];
-          const test = JSON.parse(data.sodexo_partners);
-          // need to fix savig process on backend side to not run into this issue
-          if (test.length) {
-            this.cityDetailData = {
-              name: data.name,
-              postalCodes: data.post_code,
-              sodexoPartners: test,
-            };
-          } else {
-            this.cityDetailData = {
-              name: data.name,
-              postalCodes: data.post_code,
-              sodexoPartners: JSON.parse(test),
-            };
-          }
-          this.filteredCitySodexoPartners = this.cityDetailData.sodexoPartners;
-          this.loadInfiniteScrollData();
-          //console.log(data);
-          //console.log(this.cityDetailData);
-        } else if (this.sortViaGeo) {
-          console.log('this.sortViaGeo update trigger');
-          this.cityDetailData.sodexoPartners = this.cityDetailData.sodexoPartners.map((partner) => {
+        if (this.sortViaGeo && newValue.sodexoPartners) {
+          console.log('this.sortViaGeo update trigger', newValue);
+          this.cityDetailData.sodexoPartners = newValue.sodexoPartners.map((partner) => {
             const rawDistance = this.calcDistance(partner);
             if (rawDistance > 2) {
                return {...partner, distance: Math.round(rawDistance)};
@@ -190,9 +168,32 @@ export default {
           this.resetInfiniteScrollData();
           console.log(this.currentPos);
           console.log(this.cityDetailData);
+        } else {
+          console.log('newValue', newValue);
+          if (newValue.data && newValue.data.length) {
+            const data = newValue.data[0];
+            const test = JSON.parse(data.sodexo_partners);
+            // need to fix savig process on backend side to not run into this issue
+            if (test.length) {
+              this.cityDetailData = {
+                name: data.name,
+                postalCodes: data.post_code,
+                sodexoPartners: test,
+              };
+            } else {
+              this.cityDetailData = {
+                name: data.name,
+                postalCodes: data.post_code,
+                sodexoPartners: JSON.parse(test),
+              };
+            }
+            this.filteredCitySodexoPartners = this.cityDetailData.sodexoPartners;
+            this.loadInfiniteScrollData();
+            //console.log(data);
+            //console.log(this.cityDetailData);
+          }
         }
-      }
-      
+      } 
     },
     searchBarValueAdjusted () {
       console.log('searchBarValueAdjusted');
