@@ -122,8 +122,16 @@ export default {
       if (newValue) {
         if (this.sortViaGeo) {
           console.log('updateSodexoData - this.sortViaGeo', newValue);
-          this.sodexoData = this.sodexoData.map((city) => ({...city, distance: Math.round(this.calcDistance(city))}));
+          this.sodexoData = this.sodexoData.map((city) => {
+            const rawDistance = this.calcDistance(city);
+            if (rawDistance > 2) {
+               return {...city, distance: Math.round(rawDistance)};
+            } else {
+               return {...city, distance: Math.round(rawDistance * 10) / 10};
+            }
+          });
           this.sodexoData = this.sodexoData.sort((a, b) => a.distance - b.distance);
+          console.log('this.sodexoData - post distance mapping', this.sodexoData);
           this.filteredSodexoData = this.sodexoData;
           this.resetInfiniteScrollData();
           console.log(this.currentPos);
