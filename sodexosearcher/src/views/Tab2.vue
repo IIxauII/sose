@@ -122,7 +122,11 @@ export default {
       if (newValue) {
         if (this.sortViaGeo) {
           console.log('updateSodexoData - this.sortViaGeo', newValue);
-          this.sodexoData = newValue.map((city) => {
+          let sortAndMap = newValue;
+          if (newValue.data) {
+            sortAndMap = newValue.data;
+          }
+          this.sodexoData = sortAndMap.map((city) => {
             const rawDistance = this.calcDistance(city);
             if (rawDistance > 2) {
                return {...city, distance: Math.round(rawDistance)};
