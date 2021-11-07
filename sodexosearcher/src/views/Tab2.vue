@@ -121,6 +121,7 @@ export default {
     updateSodexoData (newValue) {
       if (newValue) {
         if (this.sortViaGeo) {
+          console.log('updateSodexoData - this.sortViaGeo', newValue);
           this.sodexoData = this.sodexoData.map((city) => ({...city, distance: Math.round(this.calcDistance(city))}));
           this.sodexoData = this.sodexoData.sort((a, b) => a.distance - b.distance);
           this.filteredSodexoData = this.sodexoData;
@@ -128,6 +129,7 @@ export default {
           console.log(this.currentPos);
           console.log(this.sodexoData);
         } else {
+          console.log('updateSodexoData - default', newValue);
           this.sodexoData = newValue.data.sort((a, b) => a.name.localeCompare(b.name));
           this.filteredSodexoData = this.sodexoData;
           this.loadInfiniteScrollData();
