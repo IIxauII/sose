@@ -189,6 +189,10 @@ export default {
             }
             this.filteredCitySodexoPartners = this.cityDetailData.sodexoPartners;
             this.loadInfiniteScrollData();
+            // this needs to get fixed properly
+            if (this.sortViaGeo && this.cityDetailData.sodexoPartners) {
+              updateCityDetailData(this.cityDetailData);
+            }
             //console.log(data);
             //console.log(this.cityDetailData);
           }
