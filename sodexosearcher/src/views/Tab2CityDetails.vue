@@ -176,8 +176,16 @@ export default {
           //console.log(this.cityDetailData);
         } else if (this.sortViaGeo) {
           console.log('this.sortViaGeo update trigger');
-          this.cityDetailData.sodexoPartners = this.cityDetailData.sodexoPartners.map((partner) => ({...partner, distance: Math.round(this.calcDistance(partner))}));
+          this.cityDetailData.sodexoPartners = this.cityDetailData.sodexoPartners.map((partner) => {
+            const rawDistance = this.calcDistance(partner);
+            if (rawDistance > 2) {
+               return {...partner, distance: Math.round(rawDistance)};
+            } else {
+               return {...partner, distance: Math.round(rawDistance * 10) / 10};
+            }
+          });
           this.cityDetailData.sodexoPartners = this.cityDetailData.sodexoPartners.sort((a, b) => a.distance - b.distance);
+          console.log('this.cityDetailData - post distance mapping', this.cityDetailData);
           this.filteredCitySodexoPartners = this.cityDetailData.sodexoPartners;
           this.resetInfiniteScrollData();
           console.log(this.currentPos);
