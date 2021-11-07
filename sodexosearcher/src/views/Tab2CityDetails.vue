@@ -191,7 +191,7 @@ export default {
             this.loadInfiniteScrollData();
             // this needs to get fixed properly
             if (this.sortViaGeo && this.cityDetailData.sodexoPartners) {
-              updateCityDetailData(this.cityDetailData);
+              this.updateCityDetailData(this.cityDetailData);
             }
             //console.log(data);
             //console.log(this.cityDetailData);
