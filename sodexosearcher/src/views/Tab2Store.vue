@@ -8,11 +8,10 @@
         debounce="250"
         animated
         v-model="searchBarValue"
-        @ionChange="searchBarValueAdjusted()"
       >
         <ion-badge 
           color="primary"
-        >{{ filteredSodexoData.length }}</ion-badge>
+        >{{ getCities.length }}</ion-badge>
       </ion-searchbar>
       <ion-list>
         <ion-item 
@@ -84,96 +83,63 @@ export default {
   },
   data() {
     return {
-      infiniteScrollIsDisabled: false,
-      infiniteScrollSodexoData: [],
-      filteredSodexoData: [],
-      sodexoData: null,
       searchBarValue: null,
-      currentPos: {
-        lat: null,
-        lng: null,
-      },
-      sortViaGeo: false,
+      getCitiesFiltered: [],
+      infiniteScrollSodexoData: [],
+      infiniteScrollIsDisabled: false,
     }
   },
   computed: {
       ...mapGetters('cities', {
           getCities: 'getCities',
       }),
-      ...mapGetters('geo', {
-          getLocation: 'getLocation',
-      }),
-      filteredAndSortedCities() {
-          if (this.getCities) {
-              return true;
-          } else {
-              return true;
-          }
-      },
+  },watch: {
+    getCities(newValue, oldValue) {
+      this.resetInfiniteScrollData();
+    },
+    searchBarValue(newValue, oldValue) {
+      const lowerCaseSearchBarValue = newValue.toLowerCase();
+      this.getCitiesFiltered = this.getCities.filter((city) => { 
+        return city.name.toLowerCase().includes(lowerCaseSearchBarValue); 
+      });
+      this.resetInfiniteScrollData()
+    },
   },
   mounted() {
       console.log('tab2store mounted!');
+      this.loadInfiniteScrollData();
   },
   methods: {
-    updateSodexoData (newValue) {
-      if (newValue) {
-        if (this.sortViaGeo) {
-          console.log('updateSodexoData - this.sortViaGeo', newValue);
-          let sortAndMap = newValue;
-          if (newValue.data) {
-            sortAndMap = newValue.data;
-          }
-          this.sodexoData = sortAndMap.map((city) => {
-            const rawDistance = this.calcDistance(city);
-            if (rawDistance > 2) {
-               return {...city, distance: Math.round(rawDistance)};
-            } else {
-               return {...city, distance: Math.round(rawDistance * 10) / 10};
-            }
-          });
-          this.sodexoData = this.sodexoData.sort((a, b) => a.distance - b.distance);
-          console.log('this.sodexoData - post distance mapping', this.sodexoData);
-          this.filteredSodexoData = this.sodexoData;
-          this.resetInfiniteScrollData();
-          console.log(this.currentPos);
-          console.log(this.sodexoData);
-        } else {
-          console.log('updateSodexoData - default', newValue);
-          this.sodexoData = newValue.data.sort((a, b) => a.name.localeCompare(b.name));
-          this.filteredSodexoData = this.sodexoData;
-          this.loadInfiniteScrollData();
-        }
-      }
-    },
     cityClicked (clickedCity) {
       console.log('cityClicked');
       console.log(clickedCity);
     },
-    searchBarValueAdjusted () {
-      // might want to change this to a computed property
-      const lowerCaseSearchBarValue = this.searchBarValue.toLowerCase();
-      this.filteredSodexoData = this.sodexoData.filter((city) => { 
-        return city.name.toLowerCase().includes(lowerCaseSearchBarValue); 
-      });
-      this.resetInfiniteScrollData();
-    },
     loadInfiniteScrollData (event) {
+      let dataToWorkWith = [];
+      if (this.searchBarValue) {
+        console.log('working with getCitiesFiltered', this.getCitiesFiltered);
+        dataToWorkWith = this.getCitiesFiltered;
+      } else {
+        dataToWorkWith = this.getCities;
+        console.log('working with getCities', this.getCities);
+      }
+
       // default loading amount 25
       let loadDataAmount = 25;
       // if the rest data to be loaded is less than the default amount, adjust to not load empty items
-      if (this.filteredSodexoData.length - this.infiniteScrollSodexoData.length <= loadDataAmount) {
-        loadDataAmount = this.filteredSodexoData.length - this.infiniteScrollSodexoData.length;
+      if (dataToWorkWith.length - this.infiniteScrollSodexoData.length <= loadDataAmount) {
+        loadDataAmount = dataToWorkWith.length - this.infiniteScrollSodexoData.length;
       }
       const max = this.infiniteScrollSodexoData.length + loadDataAmount;
       const min = max - loadDataAmount;
       for (let x = min; x < max; x++) {
-        this.infiniteScrollSodexoData.push(this.filteredSodexoData[x]);
+        this.infiniteScrollSodexoData.push(dataToWorkWith[x]);
       }
       if (event) {
         event.target.complete();
       }
       // if we have loaded all available data disabled infinite loading event
-      if (this.infiniteScrollSodexoData.length >= this.filteredSodexoData.length) {
+      if (this.infiniteScrollSodexoData.length >= dataToWorkWith.length) {
         this.infiniteScrollIsDisabled = true;
       }
     },
@@ -181,41 +147,6 @@ export default {
       this.infiniteScrollSodexoData = [];
       this.loadInfiniteScrollData();
       this.infiniteScrollIsDisabled = false;
-    },
-    fetchGeoLocation() {
-      console.log('fetchGeoLocation');
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((pos) => {
-          console.log('navigator.geolocation', pos);
-          if (pos.coords) {
-            this.currentPos.lat = pos.coords.latitude;
-            this.currentPos.lng = pos.coords.longitude;
-            this.sortViaGeo = true;
-            // retrigger update to sort via geo
-            this.updateSodexoData(this.sodexoData);
-          }
-        });
-      } else {
-        // unsure if this will work 
-        // for ios some changes need to be made
-        // https://ionicframework.com/docs/native/geolocation
-        geolocation.getCurrentPosition().then((res) => {
-          console.log('geoRes', res);
-        }).catch((err) => {
-          console.log('error', err);
-        });
-      }
-    },
-    calcDistance(city) {
-      const lat2 = city.lat;
-      const lng2 = city.lng;
-      const p = 0.017453292519943295;    // Math.PI / 180
-      const c = Math.cos;
-      const a = 0.5 - c((lat2 - this.currentPos.lat) * p)/2 + 
-              c(this.currentPos.lat * p) * c(lat2 * p) * 
-              (1 - c((lng2 - this.currentPos.lng) * p))/2;
-
-      return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
     },
   }
 };

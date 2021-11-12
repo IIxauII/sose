@@ -18,7 +18,7 @@ const actions = {
         // for ios & android
         HTTP.get(apiEndpoint, {}, {})
         .then((res) => {
-            commit('saveCities', res.data);
+            commit('sortCitiesAZ', res.data);
             commit('debug/pushDebug', `Fetched cities HTTP with ${res.data.length} entries`, { root: true});
         })
         .catch((err) => {
@@ -27,7 +27,7 @@ const actions = {
             // if cordove not available, try to use axios (e.g. webbrowser enddevice)
             axios.get(apiEndpoint)
             .then((res) => {
-                commit('saveCities', res.data);
+                commit('sortCitiesAZ', res.data);
                 commit('debug/pushDebug', `Fetched cities AXIOS with ${res.data.length} entries`, { root: true});
             })
             .catch((err) => {
