@@ -14,3 +14,4 @@ This list is sorted from top to bottom, highest to lowest priority
 * Look into ios build & deployment
 * Look into UI design, adjust theme & improve component selection
 * Think about: Should I provide my gathered data to the public & share the db?
+* Rewrite everthing in ts
