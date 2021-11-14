@@ -10,6 +10,7 @@ This list is sorted from top to bottom, highest to lowest priority
 * adjust database structure, move away from POC JSON string saving of sodexo_partner data
 
 ### Frontend
+* move from router redirect to single page applicaton, easy way to reduce high api usage (each redirect triggers App.vue mounted())
 * clean up, declutter and improve usability from a UX standpoint
 * remove request tab, introduce request tab as https://ionicframework.com/docs/api/fab (possibly restricted access to reduce exposer?)
 * some component logic has introduced WET code, make it DRY (services, vuex store)
