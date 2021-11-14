@@ -1,5 +1,12 @@
+import { DebugService } from '@/services/debug';
+import { DistanceService } from '@/services/distance';
+import { SortService } from '@/services/sort'; 
 import { HTTP } from '@ionic-native/http';
 import axios from 'axios';
+
+const distanceService = new DistanceService();
+const sortService = new SortService();
+const debugService = new DebugService();
 
 const state = () => ({
     cities:[],
@@ -19,20 +26,18 @@ const actions = {
         HTTP.get(apiEndpoint, {}, {})
         .then((res) => {
             commit('sortCitiesAZ', res.data);
-            commit('debug/pushDebug', `Fetched cities HTTP with ${res.data.length} entries`, { root: true});
+            debugService.logToDebug(`Fetched cities HTTP with ${res.data.length} entries`);
         })
         .catch((err) => {
-            //console.error(err);
-            commit('debug/pushDebug', err, { root: true});
+            debugService.logToDebug(err);
             // if cordove not available, try to use axios (e.g. webbrowser enddevice)
             axios.get(apiEndpoint)
             .then((res) => {
+                debugService.logToDebug(`Fetched cities AXIOS with ${res.data.length} entries`);
                 commit('sortCitiesAZ', res.data);
-                commit('debug/pushDebug', `Fetched cities AXIOS with ${res.data.length} entries`, { root: true});
             })
             .catch((err) => {
-                //console.error(err);
-                commit('debug/pushDebug', err, { root: true});
+                debugService.logToDebug(err);
             })
         })
     },
@@ -41,31 +46,20 @@ const actions = {
 const mutations = {
     saveCities(state: { cities: any }, payload: any) {
         state.cities = payload;
+        debugService.logToDebug('Executed cities.saveCities');
     },
     sortCitiesAZ(state: { cities: any }, payload: any) {
-        state.cities = payload.sort((a: any, b: any) => a.name.localeCompare(b.name));
+        state.cities = sortService.sortByName(payload);
+        debugService.logToDebug('Executed cities.sortCitiesAZ');
     },
     sortCitiesGeo(state: { cities: any}, payload: { cities: any; location: {lat: number; lng: number}}) {
-        function calcDistance(city: any) {
-            const lat2 = city.lat;
-            const lng2 = city.lng;
-            const p = 0.017453292519943295;    // Math.PI / 180
-            const c = Math.cos;
-            const a = 0.5 - c((lat2 - payload.location.lat) * p)/2 + 
-                    c(payload.location.lat * p) * c(lat2 * p) * 
-                    (1 - c((lng2 - payload.location.lng) * p))/2;
-      
-            return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
-        }
+        const tempCities = payload.cities.map((city: any) => {
+            const rawDistance: number = distanceService.calculateDistance({city, location: payload.location});
+            return {...city, distance: distanceService.roundCityData(rawDistance)};
+        });
 
-        state.cities = payload.cities.map((city: any) => {
-            const rawDistance = calcDistance(city);
-            if (rawDistance > 2) {
-               return {...city, distance: Math.round(rawDistance)};
-            } else {
-               return {...city, distance: Math.round(rawDistance * 10) / 10};
-            }
-        }).sort((a: any, b: any) => a.distance - b.distance);
+        state.cities = sortService.sortByDistance(tempCities);
+        debugService.logToDebug('Executed cities.sortCitiesGeo');
     },
 };
 
