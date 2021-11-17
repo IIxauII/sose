@@ -5,12 +5,23 @@ export interface Partner {
     address: string;
     lat: number;
     lng: number;
-    distance?: number;
 }
 
 export interface CityWithPartner {
     name: string;
-    partners: Partner[];
+    post_code: number;
+    sodexo_partners: Partner[];
+    here_id: string;
+    lat: number;
+    lng: number;
+}
+
+export interface PartnerWithDistance extends Partner {
+    distance: number;
+}
+
+export interface CityWithPartnerWithDistance extends CityWithPartner {
+    sodexo_partners: PartnerWithDistance[];
 }
 
 export interface PartnersState {

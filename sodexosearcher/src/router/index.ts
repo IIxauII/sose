@@ -32,8 +32,8 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/Debug.vue')
       },
       {
-        path: 'tab4',
-        component: () => import('@/views/Tab2Store.vue')
+        path: 'tab4/:cityName',
+        component: () => import('@/views/Tab2CityDetailsStore.vue')
       }
     ]
   }

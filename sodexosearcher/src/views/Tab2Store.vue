@@ -19,7 +19,7 @@
         v-bind:key="index"
         button
         @click="cityClicked(city.name)"
-        v-bind:href="'/tabs/tab2/' + city.name"
+        v-bind:href="'/tabs/tab4/' + city.name"
         routerDirection='forward'
         >
           <ion-label>
