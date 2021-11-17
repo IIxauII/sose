@@ -3,6 +3,9 @@ import App from './App.vue'
 import router from './router';
 import { IonicVue } from '@ionic/vue';
 
+import { AppStartupStorageService } from './services/appStartupStorage';
+const appStartupStorageService = new AppStartupStorageService();
+
 //const store: any = require('./store/index');
 import store from './store/index';
 
@@ -26,6 +29,9 @@ import '@ionic/vue/css/display.css';
 import './theme/variables.css';
 
 console.log('maints store', store);
+
+// setting up ionic storage
+appStartupStorageService.createStorage();
 
 const app = createApp(App)
   .use(IonicVue)

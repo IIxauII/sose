@@ -1,13 +1,11 @@
+import { LogToDebugPayload } from "@/model/debug";
+
 const state: any = () => ({
-    dataList: [],
     debugList: [],
 });
 
 const getters = {
-    getData(state: { dataList: [] }) {
-        return state.dataList;
-    },
-    getDebug(state: { debugList: [] }) {
+    getDebug(state: { debugList: LogToDebugPayload[] }) {
         return state.debugList;
     },
 };
@@ -15,19 +13,12 @@ const getters = {
 const actions = {};
 
 const mutations = {
-    // dataList
-    saveData(state: {dataList: any}, payload: string[]) {
-        state.dataList = payload;
-    },
-    pushData(state: {dataList: any}, payload: string) {
-        state.dataList.push(payload);
-    },
     // debugList
     saveDebug(state: {debugList: any}, payload: string[]) {
         state.debugList = payload;
     },
-    pushDebug(state: {debugList: any}, payload: string) {
-        state.debugList.push(new Date().toLocaleTimeString() + ': ' + payload);
+    pushDebug(state: {debugList: LogToDebugPayload[]}, payload: LogToDebugPayload) {
+        state.debugList.push(payload);
     },
 };
 
