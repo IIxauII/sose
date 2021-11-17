@@ -6,6 +6,7 @@ import { StorageKeys } from '@/model/enums/storage';
 import { HTTP } from '@ionic-native/http';
 import axios from 'axios';
 import { LogLevel } from '@/model/enums/debug';
+import { GeoSpot } from '@/model/geo';
 
 const distanceService = new DistanceService();
 const sortService = new SortService();
@@ -76,8 +77,8 @@ const mutations = {
         debugService.logToDebug(LogLevel.SUCCESS, d1, 'mutations.sortCitiesAZ', `Executed`);
     },
     sortCitiesGeo(state: { cities: any}, payload: { cities: any; location: {lat: number; lng: number}}) {
-        const tempCities = payload.cities.map((city: any) => {
-            const rawDistance: number = distanceService.calculateDistance({city, location: payload.location});
+        const tempCities = payload.cities.map((city: GeoSpot) => { // this is not correct
+            const rawDistance: number = distanceService.calculateDistance({otherLocation: city, myLocation: payload.location});
             return {...city, distance: distanceService.roundCityData(rawDistance)};
         });
 

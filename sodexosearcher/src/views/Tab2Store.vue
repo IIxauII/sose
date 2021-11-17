@@ -120,11 +120,9 @@ export default {
     loadInfiniteScrollData (event) {
       let dataToWorkWith = [];
       if (this.searchBarValue) {
-        console.log('working with getCitiesFiltered', this.getCitiesFiltered);
         dataToWorkWith = this.getCitiesFiltered;
       } else {
         dataToWorkWith = this.getCities;
-        console.log('working with getCities', this.getCities);
       }
 
       // default loading amount 25
