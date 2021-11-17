@@ -5,3 +5,14 @@ export interface Partner {
     lng: number;
     distance?: number;
 }
+
+export interface CityWithPartner {
+    city: string;
+    partners: Partner[];
+}
+export interface PartnersState {
+    citiesWithPartners: CityWithPartner[];
+    currentCity: string;
+}
+
+export type PartnersStateFunction = () => { citiesWithPartners: CityWithPartner[], currentCity: string };

@@ -19,7 +19,9 @@
         v-bind:key="index"
         button
         @click="cityClicked(city.name)"
-        v-bind:href="'/tabs/tab2/' + city.name">
+        v-bind:href="'/tabs/tab2/' + city.name"
+        routerDirection='forward'
+        >
           <ion-label>
             {{ city.name }}
           </ion-label>
@@ -93,7 +95,8 @@ export default {
       ...mapGetters('cities', {
           getCities: 'getCities',
       }),
-  },watch: {
+  },
+  watch: {
     getCities(newValue, oldValue) {
       this.resetInfiniteScrollData();
     },
