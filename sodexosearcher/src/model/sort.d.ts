@@ -3,5 +3,5 @@ export interface SortInputName {
 }
 
 export interface SortInputDistance {
-    distance: number;
+    distance?: number;
 }
