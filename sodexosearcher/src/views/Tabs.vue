@@ -18,10 +18,10 @@
           <ion-label>Debug</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="tab4" href="/tabs/tab4">
+       <!--  <ion-tab-button tab="tab4" href="/tabs/tab4">
           <ion-icon :icon="square" />
           <ion-label>CityDetailStore</ion-label>
-        </ion-tab-button>
+        </ion-tab-button> -->
       </ion-tab-bar>
     </ion-tabs>
   </ion-page>

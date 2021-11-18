@@ -9,8 +9,8 @@ export interface Partner {
 
 export interface CityWithPartner {
     name: string;
-    post_code: number;
-    sodexo_partners: Partner[];
+    postalCode: number;
+    sodexoPartners: Partner[];
     here_id: string;
     lat: number;
     lng: number;
@@ -21,7 +21,7 @@ export interface PartnerWithDistance extends Partner {
 }
 
 export interface CityWithPartnerWithDistance extends CityWithPartner {
-    sodexo_partners: PartnerWithDistance[];
+    sodexoPartners: PartnerWithDistance[];
 }
 
 export interface PartnersState {

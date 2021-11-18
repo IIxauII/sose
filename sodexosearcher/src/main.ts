@@ -28,7 +28,7 @@ import '@ionic/vue/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
-console.log('maints store', store);
+// console.log('maints store', store);
 
 // setting up ionic storage
 appStartupStorageService.createStorage();
@@ -40,4 +40,5 @@ const app = createApp(App)
   
 router.isReady().then(() => {
   app.mount('#app');
+  console.log('Yummy SOSE mounted!');
 });

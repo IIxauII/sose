@@ -31,19 +31,14 @@ const getters = {
 const actions = {
     async fetchLocation({commit}: any) {
         await storageService.getItem(StorageKeys.GEO).then((data) => {
-            console.log('actions.fetchLocation', data);
             if (data) {
                 debugService.logToDebug(LogLevel.INFO, 'store.geo', 'actions.fetchLocation', `Fetched ${data} from ionic storage`);
-                //`[store.geo][actions.fetchLocation] - Fetched ${data} from ionic storage`
                 commit('saveLocationWithoutUpdatingStorage', data);
             } else {
-                //debugService.logToDebug(`[store.geo][actions.fetchLocation] - Fetching data from ionic storage failed`);
                 debugService.logToDebug(LogLevel.WARNING, 'store.geo', 'actions.fetchLocation', 'Fetching data from ionic storage failed');
                 throw Error('geo data = undefined');
             }
         }).catch((err) => {
-            //console.log('storageService.getItem - error', err);
-            //debugService.logToDebug(`[store.geo][actions.fetchLocation] - Fetching data from ionic storage failed with ${err}`);
             debugService.logToDebug(LogLevel.WARNING, 'store.geo', 'actions.fetchLocation', `Fetching data from ionic storage failed with ${err}`);
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition((pos) => {
