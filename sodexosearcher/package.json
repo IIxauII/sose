@@ -25,7 +25,7 @@
     "@ionic/storage": "^3.0.6",
     "@ionic/vue": "^5.4.0",
     "@ionic/vue-router": "^5.4.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "cordova-plugin-advanced-http": "^3.2.0",
     "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-geolocation": "^4.1.0",
