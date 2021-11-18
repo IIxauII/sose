@@ -1,15 +1,21 @@
 import { DebugService } from '@/services/debug';
 import { DistanceService } from '@/services/distance';
 import { SortService } from '@/services/sort'; 
+import { StorageService } from '@/services/storage';
+import { StorageKeys } from '@/model/enums/storage';
 import { HTTP } from '@ionic-native/http';
 import axios from 'axios';
+import { LogLevel } from '@/model/enums/debug';
+import { GeoSpot } from '@/model/geo';
 
 const distanceService = new DistanceService();
 const sortService = new SortService();
 const debugService = new DebugService();
+const d1 = 'store.cities';
+const storageService = new StorageService();
 
 const state = () => ({
-    cities:[],
+    cities: [],
 });
 
 const getters = {
@@ -20,46 +26,65 @@ const getters = {
 
 const actions = {
     async fetchCities({commit}: any) {
-        const apiEndpoint = process.env.VUE_APP_API_ENDPOINT + 'cities';
+        await storageService.getItem(StorageKeys.CITIES).then((data) => {
+            if (data) {
+                debugService.logToDebug(LogLevel.INFO, d1, 'actions', `Fetched ${data.length} from ionic storage`);
+                commit('saveCitiesWithoutUpdatingStorage', data);
+                return;
+            } else {
+                debugService.logToDebug(LogLevel.ERROR, d1, 'actions', `Fetching cities from ionic storage failed!`);
+                throw Error('data = undefined');
+            }
+        }).catch((err) => {
+            debugService.logToDebug(LogLevel.ERROR, d1, 'actions', `Fetching cities from ionic storage failed with ${err}`);
+            const apiEndpoint = process.env.VUE_APP_API_ENDPOINT + 'cities';
 
-        // for ios & android
-        HTTP.get(apiEndpoint, {}, {})
-        .then((res) => {
-            commit('sortCitiesAZ', res.data);
-            debugService.logToDebug(`Fetched cities HTTP with ${res.data.length} entries`);
-        })
-        .catch((err) => {
-            debugService.logToDebug(err);
-            // if cordove not available, try to use axios (e.g. webbrowser enddevice)
-            axios.get(apiEndpoint)
+            // for ios & android
+            HTTP.get(apiEndpoint, {}, {})
             .then((res) => {
-                debugService.logToDebug(`Fetched cities AXIOS with ${res.data.length} entries`);
+                debugService.logToDebug(LogLevel.SUCCESS, d1, 'actions', `Fetched cities HTTP with ${res.data.length} entries`);
                 commit('sortCitiesAZ', res.data);
             })
             .catch((err) => {
-                debugService.logToDebug(err);
-            })
-        })
+                debugService.logToDebug(LogLevel.ERROR, d1, 'actions', `Fetched cities HTTP failed with err: ${err}`);
+                // if cordove not available, try to use axios (e.g. webbrowser enddevice)
+                axios.get(apiEndpoint)
+                .then((res) => {
+                    debugService.logToDebug(LogLevel.SUCCESS, d1, 'actions', `Fetched cities AXIOS with ${res.data.length} entries`);
+                    commit('sortCitiesAZ', res.data);
+                })
+                .catch((err) => {
+                    debugService.logToDebug(LogLevel.ERROR, d1, 'actions', `Fetched cities AXIOS failed with err: ${err}`);
+                });
+            });
+        });
     },
 };
 
 const mutations = {
+    saveCitiesWithoutUpdatingStorage(state: { cities: any}, payload: any) {
+        state.cities = payload;
+        debugService.logToDebug(LogLevel.SUCCESS, d1, 'mutations.saveCitiesWithoutUpdatingStorage', `Executed`);
+    },
     saveCities(state: { cities: any }, payload: any) {
         state.cities = payload;
-        debugService.logToDebug('Executed cities.saveCities');
+        storageService.setItem(StorageKeys.CITIES, state.cities);
+        debugService.logToDebug(LogLevel.SUCCESS, d1, 'mutations.saveCities', `Executed`);
     },
     sortCitiesAZ(state: { cities: any }, payload: any) {
         state.cities = sortService.sortByName(payload);
-        debugService.logToDebug('Executed cities.sortCitiesAZ');
+        storageService.setItem(StorageKeys.CITIES, state.cities);
+        debugService.logToDebug(LogLevel.SUCCESS, d1, 'mutations.sortCitiesAZ', `Executed`);
     },
     sortCitiesGeo(state: { cities: any}, payload: { cities: any; location: {lat: number; lng: number}}) {
-        const tempCities = payload.cities.map((city: any) => {
-            const rawDistance: number = distanceService.calculateDistance({city, location: payload.location});
+        const tempCities = payload.cities.map((city: GeoSpot) => { // this is not correct
+            const rawDistance: number = distanceService.calculateDistance({otherLocation: city, myLocation: payload.location});
             return {...city, distance: distanceService.roundCityData(rawDistance)};
         });
 
         state.cities = sortService.sortByDistance(tempCities);
-        debugService.logToDebug('Executed cities.sortCitiesGeo');
+        storageService.setItem(StorageKeys.CITIES, state.cities);
+        debugService.logToDebug(LogLevel.SUCCESS, d1, 'mutations.sortCitiesGeo', `Executed`);
     },
 };
 

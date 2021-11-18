@@ -8,6 +8,8 @@
 import { IonApp, IonRouterOutlet } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { RouterService } from './services/router';
+const routerService = new RouterService();
 
 export default defineComponent({
   name: 'App',
@@ -18,11 +20,15 @@ export default defineComponent({
   data() {
     return {
       savedGeoAndCities: false,
+      savedGeoAndPartnersOfCurrentCity: false,
     }
   },
   computed: {
     ...mapGetters('cities', {
       getCities: 'getCities',
+    }),
+    ...mapGetters('partners', {
+      getPartnersOfCurrentCity: 'getPartnersOfCurrentCity',
     }),
     ...mapGetters('geo', {
       getLocation: 'getLocation',
@@ -33,26 +39,28 @@ export default defineComponent({
         location: this.getLocation,
       };
     },
+    geoAndPartnersOfCurrentCity() {
+      return {
+        cityWithPartners: this.getPartnersOfCurrentCity,
+        location: this.getLocation,
+      }
+    }
   },
   watch: {
     geoAndCities(newValue, oldValue) {
-      console.log('newValue', newValue);
-      console.log('oldValue', oldValue);
-      console.log('savedGeoAndCities', this.savedGeoAndCities);
       if (this.savedGeoAndCities) {
-        console.log('Already saved!', this.savedGeoAndCities);
         return;
       } else if (newValue.cities && newValue.cities.length && newValue.location && newValue.location.lat !== 0) {
-        console.log('we can do geoCalculation');
         this.sortCitiesGeo(newValue);
         this.savedGeoAndCities = true;
-      } else {
-        console.log('else');
-        console.log(newValue.cities ? true : false);
-        console.log(newValue.cities.length ? true : false);
-        console.log(newValue.location ? true: false);
-        console.log(newValue.location.lat !== 0 ? true : false);
-        console.log((newValue.cities && newValue.cities.length && newValue.location && newValue.location.lat !== 0) ? true : false);
+      }
+    },
+    geoAndPartnersOfCurrentCity(newValue, oldValue) {
+      if (this.savedGeoAndPartnersOfCurrentCity) {
+        return;
+      } else if (newValue.cityWithPartners && newValue.cityWithPartners.sodexoPartners.length && newValue.location && newValue.location.lat !== 0) {
+        this.sortPartnersGeo(newValue);
+        this.savedGeoAndPartnersOfCurrentCity = true;
       }
     },
   },
@@ -71,6 +79,9 @@ export default defineComponent({
     }),
     ...mapMutations('cities', {
       sortCitiesGeo: 'sortCitiesGeo',
+    }),
+    ...mapMutations('partners', {
+      sortPartnersGeo: 'sortPartnersGeo',
     }),
   },
 });
