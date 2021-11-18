@@ -1,6 +1,6 @@
-import  { GeoLocation } from './geo';
+import  { GeoSpot } from './geo';
 
 export interface distanceCalcInput {
-    city: GeoLocation;
-    location: GeoLocation;
+    otherLocation: GeoSpot;
+    myLocation: GeoSpot;
 }
