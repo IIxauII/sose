@@ -32,6 +32,7 @@ import {
   IonListHeader,
   IonLabel,
   IonText,
+  IonButton,
 } from "@ionic/vue";
 import DefaultHeader from "../components/global/DefaultHeader.vue";
 import { mapGetters } from "vuex";
@@ -46,6 +47,7 @@ export default {
     IonListHeader,
     IonLabel,
     IonText,
+    IonButton,
   },
   data() {
     return {

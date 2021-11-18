@@ -4,12 +4,12 @@
     <ion-content fullscreen>
       <ion-searchbar debounce="250" animated v-model="searchBarValue">
         <ion-badge color="primary">{{
-          this.getCityFiltered.sodexo_partners.length
+          this.getCityFiltered.sodexoPartners.length
         }}</ion-badge>
       </ion-searchbar>
       <ion-list>
         <ion-item
-          v-for="(partner, index) in infiniteScrollCityData.sodexo_partners"
+          v-for="(partner, index) in infiniteScrollCityData.sodexoPartners"
           v-bind:key="index"
           target="_blank"
           v-bind:href="
@@ -101,12 +101,10 @@ export default {
       searchBarValue: null,
       id: cityName,
       getCityFiltered: {
-        // eslint-disable-next-line
-        sodexo_partners: [],
+        sodexoPartners: [],
       },
       infiniteScrollCityData: {
-        // eslint-disable-next-line
-        sodexo_partners: [],
+        sodexoPartners: [],
       },
       infiniteScrollIsDisabled: false,
     };
@@ -118,9 +116,6 @@ export default {
   },
   watch: {
     getPartnersOfCurrentCity(newValue, oldValue) {
-      console.log(!oldValue ? true : false);
-      console.log("getPartnersOfCurrentCity - oldValue", oldValue);
-      console.log("getPartnersOfCurrentCity - newValue", newValue);
       this.resetInfiniteScrollData();
       // kind of a workaround to get the partner count to update once data has been fetched
       this.searchBarValue = '';
@@ -130,8 +125,7 @@ export default {
         const lowerCaseSearchBarValue = newValue.toLowerCase();
         this.getCityFiltered = {
           ...this.getPartnersOfCurrentCity,
-          // eslint-disable-next-line
-          sodexo_partners: this.getPartnersOfCurrentCity.sodexo_partners.filter(
+          sodexoPartners: this.getPartnersOfCurrentCity.sodexoPartners.filter(
             (partner) => {
               return partner.name
                 .toLowerCase()
@@ -159,9 +153,9 @@ export default {
     loadInfiniteScrollData(event) {
       let dataToWorkWith = [];
       if (this.searchBarValue) {
-        dataToWorkWith = this.getCityFiltered.sodexo_partners;
+        dataToWorkWith = this.getCityFiltered.sodexoPartners;
       } else if (this.getPartnersOfCurrentCity) {
-        dataToWorkWith = this.getPartnersOfCurrentCity.sodexo_partners;
+        dataToWorkWith = this.getPartnersOfCurrentCity.sodexoPartners;
       } else {
         return;
       }
@@ -171,35 +165,32 @@ export default {
       // if the rest data to be loaded is less than the default amount, adjust to not load empty items
       if (
         dataToWorkWith.length -
-          this.infiniteScrollCityData.sodexo_partners.length <=
+          this.infiniteScrollCityData.sodexoPartners.length <=
         loadDataAmount
       ) {
         loadDataAmount =
           dataToWorkWith.length -
-          this.infiniteScrollCityData.sodexo_partners.length;
+          this.infiniteScrollCityData.sodexoPartners.length;
       }
       const max =
-        this.infiniteScrollCityData.sodexo_partners.length + loadDataAmount;
+        this.infiniteScrollCityData.sodexoPartners.length + loadDataAmount;
       const min = max - loadDataAmount;
       for (let x = min; x < max; x++) {
-        this.infiniteScrollCityData.sodexo_partners.push(dataToWorkWith[x]);
+        this.infiniteScrollCityData.sodexoPartners.push(dataToWorkWith[x]);
       }
       if (event) {
         event.target.complete();
       }
       // if we have loaded all available data disabled infinite loading event
       if (
-        this.infiniteScrollCityData.sodexo_partners.length >=
+        this.infiniteScrollCityData.sodexoPartners.length >=
         dataToWorkWith.length
       ) {
         this.infiniteScrollIsDisabled = true;
       }
-
-      console.log("infiniteScrollCityData", this.infiniteScrollCityData);
     },
     resetInfiniteScrollData() {
-      // eslint-disable-next-line
-      this.infiniteScrollCityData.sodexo_partners = [];
+      this.infiniteScrollCityData.sodexoPartners = [];
       this.loadInfiniteScrollData();
       this.infiniteScrollIsDisabled = false;
     },

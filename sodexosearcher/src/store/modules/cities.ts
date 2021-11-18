@@ -42,8 +42,8 @@ const actions = {
             // for ios & android
             HTTP.get(apiEndpoint, {}, {})
             .then((res) => {
-                commit('sortCitiesAZ', res.data);
                 debugService.logToDebug(LogLevel.SUCCESS, d1, 'actions', `Fetched cities HTTP with ${res.data.length} entries`);
+                commit('sortCitiesAZ', res.data);
             })
             .catch((err) => {
                 debugService.logToDebug(LogLevel.ERROR, d1, 'actions', `Fetched cities HTTP failed with err: ${err}`);
