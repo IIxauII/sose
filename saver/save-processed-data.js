@@ -58,6 +58,7 @@ async function fetchHereData(cityName) {
             return {
                 here_id: res.data.items[0].id,
                 post_code: res.data.items[0].address.postalCode,
+                // lat, lng?
             };
         })
         .catch((err) => {
