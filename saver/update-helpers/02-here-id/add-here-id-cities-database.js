@@ -56,28 +56,6 @@ open({
     }
 
     fetchAndSaveToDb();
-   /*  onlyCityNames.forEach((cityName) => {
-        const hereGeocodeQuery = '?q=' + urlencode(cityName) + ' Deutschland';
-        const hereApiCall = hereGeocodeEndpoint + hereGeocodeQuery + hereApiKey;
-        console.log(hereApiCall);
-        axios.get(hereApiCall)
-          .then(async (res) => {
-            console.log('---');
-            console.log(cityName);
-            console.log(res.data.items[0].id);
-            console.log('---');
-            console.log('updating db entry with post_code & here_id for', cityName);
-            await db.exec(`UPDATE cities SET post_code = '${res.data.items[0].address.postalCode}', here_id = '${res.data.items[0].id}' WHERE name = '${cityName}';`);
-          })
-          .catch((err) => {
-            console.log('---');
-            console.log(cityName);
-            console.log(err);
-            console.log('---');
-          })
-    });
-    */
-    //TODO: Close database in a clean way using promises
 }).catch((err) => {
     throw err;
 })
