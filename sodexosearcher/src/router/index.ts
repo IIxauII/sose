@@ -15,10 +15,10 @@ const routes: Array<RouteRecordRaw> = [
         path: '',
         redirect: '/tabs/tab2'
       },
-     /*  {
+      {
         path: 'tab1',
-        component: () => import('@/views/Tab1.vue')
-      }, */
+        component: () => import('@/views/Map.vue')
+      },
       {
         path: 'tab2',
         component: () => import('@/views/Tab2Store.vue')
