@@ -96,6 +96,7 @@ export default {
         const zoomLevel = this.map.getZoom();
         //const minZoomLevel = 2;
         //const maxZoomlevel = 22;
+        //need to work out a formula for this below
         let maxDistance = 0;
         if (zoomLevel <= 8) {
           maxDistance = 100;
