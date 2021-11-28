@@ -7,21 +7,14 @@
           <ion-icon :icon="triangle" />
           <ion-label>Map</ion-label>
         </ion-tab-button>
-
         <ion-tab-button tab="tab2" href="/tabs/tab2">
           <ion-icon :icon="ellipse" />
           <ion-label>Cities</ion-label>
         </ion-tab-button>
-
         <ion-tab-button tab="tab3" href="/tabs/tab3">
           <ion-icon :icon="square" />
           <ion-label>Debug</ion-label>
         </ion-tab-button>
-
-       <!--  <ion-tab-button tab="tab4" href="/tabs/tab4">
-          <ion-icon :icon="square" />
-          <ion-label>CityDetailStore</ion-label>
-        </ion-tab-button> -->
       </ion-tab-bar>
     </ion-tabs>
   </ion-page>
