@@ -4,22 +4,18 @@
     <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
     <default-header headerTitle="Map"></default-header>
     <ion-content fullscreen> </ion-content>
-    <div
-      style="width: 100%; height: 100%;"
-      id="mapContainer"
-      ref="hereMap"
-    ></div>
+    <div style="width: 100%; height: 100%;" id="mapContainer" ref="hereMap"></div>
   </ion-page>
 </template>
 <script>
-import { IonPage, IonContent } from "@ionic/vue";
-import DefaultHeader from "../components/global/DefaultHeader.vue";
-import H from "@here/maps-api-for-javascript";
+import { IonPage, IonContent } from '@ionic/vue';
+import DefaultHeader from '../components/global/DefaultHeader.vue';
+import H from '@here/maps-api-for-javascript';
 import { mapGetters, mapActions } from 'vuex';
 import hereConfig from '../../../configs/here.json';
 
 export default {
-  name: "Map",
+  name: 'Map',
   components: {
     IonPage,
     IonContent,
@@ -32,7 +28,8 @@ export default {
       center: { lat: 49.01094, lng: 8.40845 },
       map: null,
       mapUi: null,
-      markerGroup: null,
+      mapPartnerGroup: null,
+      mapCurrentPosGroup: null,
     };
   },
   computed: {
@@ -50,7 +47,7 @@ export default {
         setTimeout(() => {
           this.center = newValue;
           this.updateCenter();
-        }, 500)
+        }, 500);
       }
     },
     getNearPartners(newValue, oldValue) {
@@ -60,7 +57,7 @@ export default {
           this.addPartnersToMap(newValue);
         }, 500);
       }
-    }
+    },
   },
   mounted() {
     setTimeout(() => {
@@ -85,7 +82,7 @@ export default {
       });
       console.log('this.map', this.map);
 
-      addEventListener("resize", () => {
+      addEventListener('resize', () => {
         console.log('resize triggered!');
         this.map.getViewPort().resize();
       });
@@ -103,10 +100,10 @@ export default {
         } else if (zoomLevel <= 10) {
           maxDistance = 50;
         } else if (zoomLevel <= 12) {
-          maxDistance = 10
-        } else if(zoomLevel <= 14) {
+          maxDistance = 10;
+        } else if (zoomLevel <= 14) {
           maxDistance = 3;
-        } else if(zoomLevel <= 16) {
+        } else if (zoomLevel <= 16) {
           maxDistance = 2;
         } else if (zoomLevel <= 18) {
           maxDistance = 1;
@@ -119,14 +116,12 @@ export default {
           lng: center.lng,
           maxDistance,
         });
+
+        this.addCurrentPosToMap();
       });
 
       new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));
       this.mapUi = H.ui.UI.createDefault(this.map, mapTypes);
-
-      if (this.getLocation) {
-        console.log(this.getLocation);
-      }
     },
     updateCenter() {
       if (this.mapUi) {
@@ -137,33 +132,54 @@ export default {
     addPartnersToMap(nearPartners) {
       console.log('addingPartnersToMap');
       if (nearPartners) {
-        if (this.group) {
-          this.map.removeObject(this.group);
-        } 
-        this.group= new H.map.Group();
-        this.map.addObject(this.group);
+        if (this.mapPartnerGroup) {
+          this.map.removeObject(this.mapPartnerGroup);
+        }
+        this.mapPartnerGroup = new H.map.Group();
+        this.map.addObject(this.mapPartnerGroup);
         nearPartners.forEach((partner) => {
           const marker = new H.map.Marker({ lat: partner.lat, lng: partner.lng });
           marker.setData(`<p>${partner.name}</p>`);
-          marker.addEventListener('tap', (event) => {
-            const bubbles = this.mapUi.getBubbles();
-            if (bubbles && bubbles.length) {
-              console.log(bubbles.length);
+          marker.addEventListener(
+            'tap',
+            (event) => {
+              const bubbles = this.mapUi.getBubbles();
+              if (bubbles && bubbles.length) {
+                console.log(bubbles.length);
                 bubbles.forEach((bubble) => {
                   this.mapUi.removeBubble(bubble);
+                });
+              }
+
+              const bubble = new H.ui.InfoBubble(event.target.getGeometry(), {
+                content: event.target.getData(),
               });
-            }
-            
-            const bubble = new H.ui.InfoBubble(
-                event.target.getGeometry(),
-                {
-                  content: event.target.getData(),
-                }
-            );
-            this.mapUi.addBubble(bubble);
-          }, false);
-          this.group.addObject(marker);
+              this.mapUi.addBubble(bubble);
+            },
+            false
+          );
+          this.mapPartnerGroup.addObject(marker);
         });
+      }
+    },
+    addCurrentPosToMap() {
+      console.log('addCurrentPosToMap');
+      if (!this.map || !this.mapUi) {
+        return;
+      }
+      if (this.mapCurrentPosGroup) {
+        this.mapCurrentPosGroup.removeAll();
+      } else {
+        this.mapCurrentPosGroup = new H.map.Group();
+        this.map.addObject(this.mapCurrentPosGroup);
+      }
+      if (this.getLocation) {
+        // thanks to https://codepen.io/shaneparsons/pen/MpgEma
+        const animatedDot =
+          '<svg width="30" height="30" viewbox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" fill="none" r="10" stroke="#383a36" stroke-width="2"><animate attributeName="r" from="8" to="20" dur="1.5s" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" from="1" to="0" dur="1.5s" begin="0s" repeatCount="indefinite"/></circle><circle cx="20" cy="20" fill="#383a36" r="10"/></svg>';
+        const currentPosIcon = new H.map.DomIcon(animatedDot);
+        const currentPositionMarker = new H.map.DomMarker({ lat: this.getLocation.lat, lng: this.getLocation.lng }, { icon: currentPosIcon });
+        this.mapCurrentPosGroup.addObject(currentPositionMarker);
       }
     },
   },
