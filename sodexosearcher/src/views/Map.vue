@@ -39,11 +39,8 @@ export default {
     ...mapGetters('geo', {
       getLocation: 'getLocation',
     }),
-    ...mapGetters('cities', {
-      getCities: 'getCities',
-    }),
     ...mapGetters('partners', {
-      getPartnersOfCurrentCity: 'getPartnersOfCurrentCity',
+      getNearPartners: 'getNearPartners',
     }),
   },
   watch: {
@@ -52,22 +49,16 @@ export default {
       if (newValue.lat !== 0) {
         setTimeout(() => {
           this.center = newValue;
+          this.fetchNearPartners({
+            ...newValue,
+            maxDistance: 1,
+          });
           this.updateCenter();
         }, 500)
       }
     },
-    getCities(newValue, oldValue) {
-      console.log('getCities', newValue);
-      if (newValue && newValue[0].distance) {
-        setTimeout(() => {
-          console.log('fetching Partners of City');
-          this.setCurrentCity(newValue[0].name);
-          this.fetchCityWithPartners(newValue[0].name);
-        }, 500);
-      }
-    },
-    getPartnersOfCurrentCity(newValue, oldValue) {
-      console.log('getPartnersOfCurrentCity', newValue);
+    getNearPartners(newValue, oldValue) {
+      console.log('getNearPartners', newValue);
       if (newValue) {
         setTimeout(() => {
           this.addPartnersToMap(newValue);
@@ -76,6 +67,12 @@ export default {
     }
   },
   mounted() {
+    if (this.getLocation) {
+      this.fetchNearPartners({
+        ...this.getLocation,
+        maxDistance: 5,
+      });
+    }
     setTimeout(() => {
       console.log('trying to add here map service now!');
       this.platform = new H.service.Platform({
@@ -86,10 +83,7 @@ export default {
   },
   methods: {
     ...mapActions('partners', {
-      fetchCityWithPartners: 'fetchCityWithPartners',
-    }),
-    ...mapMutations('partners', {
-      setCurrentCity: "setCurrentCity",
+      fetchNearPartners: 'fetchNearPartners',
     }),
     initializeHereMap() {
       const mapContainer = this.$refs.hereMap;
@@ -114,13 +108,13 @@ export default {
         this.mapUi.getMap().setCenter(this.center, false);
       }
     },
-    addPartnersToMap(cityWithPartners) {
-      if (cityWithPartners) {
+    addPartnersToMap(nearPartners) {
+      if (nearPartners) {
         if (!this.group) {
           this.group= new H.map.Group()
           this.map.addObject(this.group);
         }
-        cityWithPartners.sodexoPartners.forEach((partner) => {
+        nearPartners.forEach((partner) => {
           const marker = new H.map.Marker({ lat: partner.lat, lng: partner.lng })
           /* const domMarker = new H.map.DomMarker(
             { lat: partner.lat, lng: partner.lng },
