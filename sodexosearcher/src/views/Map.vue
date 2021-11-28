@@ -25,7 +25,6 @@ export default {
     return {
       platform: null,
       apikey: hereConfig.apiKey,
-      center: { lat: 49.01094, lng: 8.40845 },
       map: null,
       mapUi: null,
       mapPartnerGroup: null,
@@ -39,16 +38,19 @@ export default {
     ...mapGetters('partners', {
       getNearPartners: 'getNearPartners',
     }),
+    currentLocation() {
+      // fallback location is the location I would profit most of :hehe:
+      const locationToReturn = this.getLocation.lat !== 0 ? {lat: this.getLocation.lat, lng: this.getLocation.lng} : { lat: 49.008439, lng: 8.40845 };
+      //this.updateCenter()
+      return locationToReturn;
+    },
   },
   watch: {
     getLocation(newValue, oldValue) {
       console.log('getLocation', newValue);
-      if (newValue.lat !== 0) {
-        setTimeout(() => {
-          this.center = newValue;
-          this.updateCenter();
-        }, 500);
-      }
+      setTimeout(() => {
+        this.updateCenter();
+      }, 500);
     },
     getNearPartners(newValue, oldValue) {
       console.log('getNearPartners', newValue);
@@ -78,7 +80,7 @@ export default {
 
       this.map = new H.Map(mapContainer, mapTypes.vector.normal.map, {
         zoom: 17,
-        center: this.center,
+        center: this.currentLocation,
       });
       console.log('this.map', this.map);
 
@@ -126,7 +128,7 @@ export default {
     updateCenter() {
       if (this.mapUi) {
         // man i really need to start using typescript..
-        this.mapUi.getMap().setCenter(this.center, false);
+        this.mapUi.getMap().setCenter(this.currentLocation, false);
       }
     },
     addPartnersToMap(nearPartners) {
@@ -173,12 +175,12 @@ export default {
         this.mapCurrentPosGroup = new H.map.Group();
         this.map.addObject(this.mapCurrentPosGroup);
       }
-      if (this.getLocation) {
+      if (this.currentLocation) {
         // thanks to https://codepen.io/shaneparsons/pen/MpgEma
         const animatedDot =
           '<svg width="30" height="30" viewbox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" fill="none" r="10" stroke="#383a36" stroke-width="2"><animate attributeName="r" from="8" to="20" dur="1.5s" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" from="1" to="0" dur="1.5s" begin="0s" repeatCount="indefinite"/></circle><circle cx="20" cy="20" fill="#383a36" r="10"/></svg>';
         const currentPosIcon = new H.map.DomIcon(animatedDot);
-        const currentPositionMarker = new H.map.DomMarker({ lat: this.getLocation.lat, lng: this.getLocation.lng }, { icon: currentPosIcon });
+        const currentPositionMarker = new H.map.DomMarker({ lat: this.currentLocation.lat, lng: this.currentLocation.lng }, { icon: currentPosIcon });
         this.mapCurrentPosGroup.addObject(currentPositionMarker);
       }
     },
