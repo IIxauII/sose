@@ -15,7 +15,7 @@
 import { IonPage, IonContent } from "@ionic/vue";
 import DefaultHeader from "../components/global/DefaultHeader.vue";
 import H from "@here/maps-api-for-javascript";
-import { mapGetters, mapActions, mapMutations } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import hereConfig from '../../../configs/here.json';
 
 export default {
