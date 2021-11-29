@@ -19,8 +19,6 @@
         v-bind:key="index"
         button
         @click="cityClicked(city.name)"
-        v-bind:href="'/tabs/tab4/' + city.name"
-        routerDirection='forward'
         >
           <ion-label>
             {{ city.name }}
@@ -114,8 +112,7 @@ export default {
   },
   methods: {
     cityClicked (clickedCity) {
-      console.log('cityClicked');
-      console.log(clickedCity);
+      this.$router.push(`/tabs/tab2/${clickedCity}`);
     },
     loadInfiniteScrollData (event) {
       let dataToWorkWith = [];
