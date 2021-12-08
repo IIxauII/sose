@@ -27,6 +27,7 @@ const state: PartnersStateFunction = () => ({
     citiesWithPartners: [],
     currentCity: '',
     nearPartners: [],
+    mapAllPartners: [],
 });
 
 const getters = {
@@ -38,6 +39,9 @@ const getters = {
     },
     getNearPartners(state: PartnersState): Partner[] {
         return state.nearPartners;
+    },
+    getMapAllPartners(state: PartnersState): Partner[] {
+        return state.mapAllPartners;
     }
 };
 
@@ -134,12 +138,38 @@ const actions = {
                         console.log(err);
                     });
             });
+    },
+    async fetchAllPartners({commit}: any) {
+        const apiEndpoint = process.env.VUE_APP_API_ENDPOINT + 'partners/';
+        // for ios & android
+        HTTP.get(apiEndpoint, {}, {})
+            .then((res) => {
+                console.log(res);
+                commit('saveMapAllPartners', res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+
+                // if cordove not available, try to use axios (e.g. webbrowser enddevice)
+                axios
+                    .get(apiEndpoint)
+                    .then((res) => {
+                       console.log(res);
+                       commit('saveMapAllPartners', res.data);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            });
     }
 };
 
 const mutations = {
     saveNearPartners(state: PartnersState, payload: Partner[]) {
         state.nearPartners = payload;
+    },
+    saveMapAllPartners(state: PartnersState, payload: Partner[]) {
+        state.mapAllPartners = payload;
     },
     setCurrentCity(state: PartnersState, payload: string) {
         state.currentCity = payload;
