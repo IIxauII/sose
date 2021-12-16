@@ -33,7 +33,7 @@ export default {
         dataPoints: null,
         dataProvider: null,
         clusteringLayer: null,
-      }
+      },
     };
   },
   computed: {
@@ -113,19 +113,61 @@ export default {
     updateCenter() {
       if (this.mapUi) {
         // man i really need to start using typescript..
-        this.mapUi.getMap().setCenter(this.currentLocation, false);
+        this.mapUi.getMap().setCenter(this.currentLocation, true);
       }
     },
     startClustering(data) {
       this.clustering.dataPoints = data.map((item) => {
-        return new window.H.clustering.DataPoint(item.lat, item.lng);
+        // could pass complete object here and not only a string with html node
+        return new window.H.clustering.DataPoint(item.lat, item.lng, 1, `<li>${item.name}</li>`);
       })
+      console.log('this.clustering.dataPoints[0]', this.clustering.dataPoints[0].data);
       this.clustering.dataProvider = new window.H.clustering.Provider(this.clustering.dataPoints, {
         clusteringOptions: {
+          strategy: window.H.clustering.Provider.Strategy.FASTGRID,
           eps: 32,
           minWeight: 2,
+          theme: {
+            getClusterPresentation: function(cluster) {
+              const dataPoints = [];
+              cluster.forEachDataPoint(dataPoints.push.bind(dataPoints));
+              const randomDataPoint = dataPoints[0],
+              data = randomDataPoint.getData();
+
+              // Create a marker from a random point in the cluster
+              const clusterMarker = new H.map.Marker(cluster.getPosition(), {
+                // Set min/max zoom with values from the cluster,
+                // otherwise clusters will be shown at all zoom levels:
+                min: cluster.getMinZoom(),
+                max: cluster.getMaxZoom()
+              });
+
+              // Link data from the random point from the cluster to the marker,
+              // to make it accessible inside onMarkerClick
+              clusterMarker.setData(data);
+
+              return clusterMarker;
+            },
+            getNoisePresentation: function (noisePoint) {
+              // Get a reference to data object our noise points
+              const data = noisePoint.getData(),
+                // Create a marker for the noisePoint
+                noiseMarker = new H.map.Marker(noisePoint.getPosition(), {
+                  // Use min zoom from a noise point
+                  // to show it correctly at certain zoom levels:
+                  min: noisePoint.getMinZoom(),
+                });
+
+              // Link a data from the point to the marker
+              // to make it accessible inside onMarkerClick
+              noiseMarker.setData(data);
+
+              return noiseMarker;
+            },
+          },
         }
       });
+      this.clustering.dataProvider.addEventListener('tap', this.onMarkerClick);
       this.clustering.clusteringLayer = new window.H.map.layer.ObjectLayer(this.clustering.dataProvider);
       this.map.addLayer(this.clustering.clusteringLayer);
     },
@@ -149,6 +191,61 @@ export default {
         this.mapCurrentPosGroup.addObject(currentPositionMarker);
       }
     },
+    getBubbleContent(data) {
+      // could use this function later on for some data transformation or similar stuff
+      return data;
+    },
+    onMarkerClick(event) {
+      let processedDataString = '';
+      const processedDataArray = [];
+      const position = event.target.getGeometry();
+      const data = event.target.getData();
+      
+      if (data.isCluster) {
+        if (data.isCluster()) {
+          data.forEachDataPoint((dataPoint) => {
+            processedDataArray.push(dataPoint.getData());
+          });
+          let processed = 0;
+          processedDataArray.forEach((entry) => {
+            if (processed === 3) {
+              return;
+            } else {
+              processedDataString += entry;
+              ++processed;
+            }
+          })
+          if (processedDataArray.length > 3) {
+            processedDataString = '<div><ul>' + processedDataString + `</ul><p>and ${processedDataArray.length - 3} others...</p></div>`;
+          } else {
+            processedDataString = '<div><ul>' + processedDataString + '</ul></div>';
+          }
+        } else {
+          processedDataString = data.getData();
+        }
+      } else {
+        console.log('ELSEELSE');
+        processedDataString = data.getData();
+      }
+      const bubbleContent = this.getBubbleContent(processedDataString);
+      let bubble = this.onMarkerClick.bubble;
+
+      console.log('onMarkerClick - stuff', {position,data,bubbleContent,bubble,});
+      if (!bubble) {
+        bubble = new H.ui.InfoBubble(position, {
+          content: bubbleContent
+        });
+        this.mapUi.addBubble(bubble);
+        this.onMarkerClick.bubble = bubble;
+      } else {
+        bubble.setPosition(position);
+        bubble.setContent(bubbleContent);
+        bubble.open();
+      }
+
+      // not sure if this is better or not :thinking:
+      //this.mapUi.getMap().setCenter(position, true);
+    }
   },
 };
 </script>
@@ -159,5 +256,9 @@ export default {
   text-align: center;
   margin: 5% auto;
   background-color: #ccc;
+}
+
+ul {
+  padding: 0;
 }
 </style>
