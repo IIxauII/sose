@@ -1,5 +1,6 @@
 <template>
   <ion-app>
+    <sose-menu></sose-menu>
     <ion-router-outlet />
   </ion-app>
 </template>
@@ -8,12 +9,14 @@
 import { IonApp, IonRouterOutlet } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
+import SoseMenu from './components/Menu.vue';
 
 export default defineComponent({
   name: 'App',
   components: {
     IonApp,
-    IonRouterOutlet
+    IonRouterOutlet,
+    SoseMenu,
   },
   data() {
     return {
