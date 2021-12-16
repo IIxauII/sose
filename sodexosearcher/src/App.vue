@@ -8,8 +8,6 @@
 import { IonApp, IonRouterOutlet } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import { RouterService } from './services/router';
-const routerService = new RouterService();
 
 export default defineComponent({
   name: 'App',

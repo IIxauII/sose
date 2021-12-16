@@ -28,6 +28,7 @@ export interface PartnersState {
     citiesWithPartners: CityWithPartner[];
     currentCity: string;
     nearPartners: Partner[];
+    mapAllPartners: Partner[];
 }
 
 export interface PartnersGeoPayload {
