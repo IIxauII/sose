@@ -32,7 +32,21 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/Debug.vue')
       },
     ]
-  }
+  },
+  {
+    path: '/menu/',
+    component: () => import('@/views/Menu/Settings.vue'),
+    children: [
+      { 
+        path: '',
+        redirect: '/menu/settings',
+      },
+      {
+        path: 'settings',
+        component: () => import('@/views/Menu/Settings.vue'),
+      },
+    ],
+  },
 ]
 
 const router = createRouter({
