@@ -10,6 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "webdriverio": "^7.7.4"
+    "webdriverio": "^8.3.5"
   }
 }
